@@ -15,12 +15,10 @@ require.config({
     'marked': 'vendor/marked',
     'JSXTransformer': 'vendor/JSXTransformer',
     'backbone': 'vendor/backbone',
-    'PDFJS': 'vendor/pdfjs/pdf',
-    'selectize': 'vendor/selectize'
+    'PDFJS': 'vendor/pdfjs/pdf'
   },
   shim: {
     'jQuery': { exports : 'jQuery' },
-    'selectize': [ 'jQuery' ],
     'underscore': { exports : '_' },
     "backbone": {
       deps: ["jQuery", "underscore"],

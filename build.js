@@ -1,7 +1,6 @@
 ({
-  appDir: "./public",
   baseUrl: "./scripts",
-  mainConfigFile: './public/scripts/common.js',
+  mainConfigFile: './scripts/common.js',
   dir: "./build",
   optimize: "uglify2",
   useStrict: true,
@@ -20,16 +19,6 @@
     {
       name: "common",
       exclude: ["react", "JSXTransformer", "text"]
-    },
-    {
-      name: 'project',
-      include: ['dispatchers/project'],
-      exclude: ['common']
-    },
-    {
-      name: 'documents',
-      include: ['dispatchers/documents'],
-      exclude: ['common']
     },
     {
       name: 'document',

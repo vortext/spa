@@ -22,7 +22,6 @@ define(function (require) {
   // Components
   var Document = require("jsx!components/document");
   var Marginalia = require("jsx!components/marginalia");
-  var TopBar = require("jsx!components/topBar");
 
   var documentComponent = React.renderComponent(
     Document({pdf: documentModel}),
@@ -33,25 +32,6 @@ define(function (require) {
     Marginalia({marginalia: marginaliaModel}),
     document.getElementById("marginalia")
   );
-
-  var topBar = React.renderComponent(
-    TopBar({marginalia: marginaliaModel}),
-    document.getElementById("top-bar")
-  );
-
-  // Routes
-  var Router = Backbone.Router.extend({
-    routes: {
-      "projects/:project/documents/:fingerprint":                "view",
-      "projects/:project/documents/:fingerprint/a/:annotation":  "view"
-    },
-    view: function(project, fingerprint, annotation) {
-      marginaliaModel.reset();
-      documentModel.loadFromUrl(window.location.href + "?mime=application/pdf");
-    }
-  });
-
-  new Router();
 
   // Dispatch logic
   // Listen to model change callbacks -> trigger updates to components
@@ -67,11 +47,7 @@ define(function (require) {
     case "annotations:add":
     case "annotations:remove":
     case "change:description":
-      marginaliaModel.save(
-        function() {topBar.setState({isSaving: "saving"});},
-        function() {topBar.setState({isSaving: "done"});},
-        function(err) {topBar.setState({isSaving: "error"});}
-      );
+      console.log("changed", e, obj);
     default:
       documentModel.setActiveAnnotations(marginaliaModel);
       marginaliaComponent.forceUpdate();
@@ -110,9 +86,7 @@ define(function (require) {
     }
   });
 
-  Backbone.history.start({pushState: true});
-
   // Set initial state
-  marginaliaModel.reset(marginaliaModel.parse(window.models.marginalia));
+  // marginaliaModel.reset(marginaliaModel.parse(window.models.marginalia));
 
 });

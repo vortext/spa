@@ -30,10 +30,6 @@ require.config({
   }
 });
 
-require.config({
-  urlArgs: LAST_COMMIT
-});
-
 require(["backbone"], function(Backbone) {
   var _sync = Backbone.sync;
   Backbone.sync = function(method, model, options){

@@ -8,29 +8,6 @@ html.view, html.view body {
     overflow: hidden;
 }
 
-html.home {
-    background: url(/static/img/bg.jpg) no-repeat top center fixed black;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-}
-
-html.home fieldset {
-    border-radius: 2px;
-    border: 1px solid #eee;
-    padding: 1em;
-    margin-bottom: -1em;
-    -moz-box-shadow:    0 0 5px rgba(0,0,0,0.6);
-    -webkit-box-shadow: 0 0 5px rgba(0,0,0,0.6);
-    box-shadow:         0 0 5px rgba(0,0,0,0.6);
-    background-color: white;
-}
-
-html.home p, html.home h1 {
-    color: white;
-}
-
 h1, h2, h3, h4, h5, h6, h7 {
     font-family: 'Montserrat', 'Source Sans Pro', 'Helvetica', sans-serif;
     font-weight: 700;
@@ -120,7 +97,6 @@ h1, h2, h3, h4, h5, h6, h7 {
 .block {
     margin: 1.0em;
 }
-
 
 .block ul.annotations {
     margin-bottom: 0;
@@ -329,8 +305,6 @@ a:hover img.icon {
     transition-property: opacity;
     transition-duration: 100ms;
     transition-timing-function: all;
-
-
 }
 
 .tooltip.annotate:hover {
@@ -338,7 +312,7 @@ a:hover img.icon {
 }
 
 .popup {
-    background: url('/static/img/pencil-trash-sprite.png') no-repeat top left;
+    background: url('../img/pencil-trash-sprite.png') no-repeat top left;
     width: 18px;
     height: 18px;
 }

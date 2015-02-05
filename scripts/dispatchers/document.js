@@ -18,8 +18,14 @@ define(function (require) {
   var marginaliaModel = new (require("models/marginalia"))();
 
   // Components
+  var TopBar = require("jsx!components/topBar");
   var Document = require("jsx!components/document");
   var Marginalia = require("jsx!components/marginalia");
+
+  var topBarComponent = React.renderComponent(
+    TopBar({}),
+    document.getElementById("top-bar")
+  );
 
   var documentComponent = React.renderComponent(
     Document({pdf: documentModel}),
@@ -81,8 +87,5 @@ define(function (require) {
       break;
     }
   });
-
-  // Set initial state
-  // marginaliaModel.reset(marginaliaModel.parse(window.models.marginalia));
 
 });

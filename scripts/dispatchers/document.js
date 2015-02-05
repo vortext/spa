@@ -13,8 +13,6 @@ define(function (require) {
   PDFJS.cMapPacked = true;
   PDFJS.disableWebGL = !Modernizr.webgl;
 
-  var self = this;
-
   // Models
   var documentModel = new (require("models/document"))();
   var marginaliaModel = new (require("models/marginalia"))();
@@ -40,7 +38,6 @@ define(function (require) {
     case "annotations:select":
       var fingerprint = documentModel.get("fingerprint");
       documentComponent.setState({select: obj});
-      //self.router.navigate(window.location.href + "/a/" + obj);
       break;
     case "annotations:change":
       break;
@@ -58,7 +55,6 @@ define(function (require) {
     switch(e) {
     case "change:raw":
       var fingerprint = obj.changed.raw.pdfInfo.fingerprint;
-      //self.router.navigate("view/" + fingerprint);
       documentComponent.setState({
         fingerprint: fingerprint
       });
@@ -67,7 +63,7 @@ define(function (require) {
       marginaliaModel.reset();
       break;
     case "annotation:add":
-      var model = marginaliaModel.findWhere({"active": true}).get("annotations");
+      var model = marginaliaModel.findWhere({active: true}).get("annotations");
       model.add(obj);
       break;
     case "pages:change:state":

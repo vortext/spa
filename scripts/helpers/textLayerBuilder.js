@@ -3,7 +3,7 @@ define(function (require) {
   'use strict';
 
   var _ = require("underscore");
-  require("PDFJS");
+  var PDFJS = require("PDFJS");
 
   var TextLayerBuilder = function textLayerBuilder(options) {
     var viewport = options.viewport;

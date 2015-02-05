@@ -3,12 +3,21 @@ define(function (require) {
   'use strict';
 
   var _ = require("underscore");
-  var $ = require("jQuery");
+  var $ = require("jquery");
   var React = require("react");
-  var Popup = require("jsx!components/popup");
-  var Minimap = require("jsx!components/minimap");
-  var Page = require("jsx!components/page");
-  var TextUtil = require("helpers/textUtil");
+
+  var Popup = require("jsx!./popup");
+  var Minimap = require("jsx!./minimap");
+  var Page = require("jsx!./page");
+  var TextUtil = require("../helpers/textUtil");
+
+  var PDFJS = require("PDFJS");
+
+  PDFJS.workerSrc = '../vendor/pdfjs/pdf.worker.js';
+  PDFJS.cMapUrl = '../vendor/pdfjs/generic/web/cmaps/';
+
+  PDFJS.cMapPacked = true;
+  PDFJS.disableWebGL = !Modernizr.webgl;
 
   var Document = React.createClass({
     getInitialState: function() {

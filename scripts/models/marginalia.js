@@ -3,9 +3,9 @@ define(function (require) {
   'use strict';
 
   var _ = require("underscore");
-  var $ = require("jQuery");
+  var $ = require("jquery");
   var Backbone = require("backbone");
-  var Annotation = require('models/annotation');
+  var Annotation = require('./annotation');
 
   var colors = // from Cynthia Brewer (ColorBrewer)
         [[102,166,30],

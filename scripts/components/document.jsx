@@ -12,11 +12,9 @@ define(function (require) {
   var TextUtil = require("../helpers/textUtil");
 
   var PDFJS = require("PDFJS");
+  var PDFJSUrl = require.toUrl('PDFJS');
 
-  PDFJS.workerSrc = '../vendor/pdfjs/pdf.worker.js';
-  PDFJS.cMapUrl = '../vendor/pdfjs/generic/web/cmaps/';
-
-  PDFJS.cMapPacked = true;
+  PDFJS.workerSrc = PDFJSUrl + ".worker.js";
   PDFJS.disableWebGL = !Modernizr.webgl;
 
   var Document = React.createClass({

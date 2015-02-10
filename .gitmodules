@@ -1,3 +1,6 @@
 [submodule "src/pdfjs"]
 	path = pdfjs
 	url = https://github.com/joelkuiper/pdf.js.git
+[submodule "pdfjs"]
+	path = pdfjs
+	url = https://github.com/joelkuiper/pdf.js.git

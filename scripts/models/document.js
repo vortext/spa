@@ -5,7 +5,8 @@ define(function (require) {
   var Q = require("Q");
   var _ = require("underscore");
   var Backbone = require("backbone");
-  var Annotation = require("models/annotation");
+  var Annotation = require("./annotation");
+  var PDFJS = require("PDFJS");
 
   var guid = function() {
     // RFC4122 version 4 compliant

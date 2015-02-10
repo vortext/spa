@@ -3,9 +3,8 @@ define(function (require) {
   'use strict';
 
   var _ = require("underscore");
-  var $ = require("jQuery");
   var React = require("react");
-  var TextLayerBuilder = require("helpers/textLayerBuilder");
+  var TextLayerBuilder = require("../helpers/textLayerBuilder");
 
   var TextNode = React.createClass({
     shouldComponentUpdate: function(nextProps, nextState) {

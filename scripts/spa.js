@@ -2,7 +2,6 @@
 'use strict';
 
 require.config({
-  baseUrl: '/static/scripts',
   jsx: {
     harmony: true,
     fileExtension: '.jsx'
@@ -30,12 +29,7 @@ require.config({
   }
 });
 
-require(["backbone"], function(Backbone) {
-  var _sync = Backbone.sync;
-  Backbone.sync = function(method, model, options){
-    options.beforeSend = function(xhr){
-      xhr.setRequestHeader('X-CSRF-Token', CSRF_TOKEN);
-    };
-    return _sync(method, model, options);
-  };
+
+define(function (require) {
+  var Dispatcher = require("dispatchers/document");
 });

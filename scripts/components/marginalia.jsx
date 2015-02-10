@@ -3,10 +3,9 @@ define(function (require) {
   'use strict';
 
   var _ = require("underscore");
-  var $ = require("jQuery");
   var React = require("react");
 
-  var Editable = require("jsx!components/editable");
+  var Editable = require("jsx!./editable");
 
   var Annotation = React.createClass({
     destroy: function() {

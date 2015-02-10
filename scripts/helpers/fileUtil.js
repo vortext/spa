@@ -18,16 +18,15 @@ define(function (require) {
     deferred.notify({message: "Processing…", completed: NaN});
   }
 
-  var upload = function(uri, data, fields) {
+  var upload = function(uri, data) {
     var deferred = Q.defer();
     var xhr = new XMLHttpRequest();
-    var fd = new FormData();
 
     xhr.upload.addEventListener("progress", _.partial(updateProgress, deferred), false);
     xhr.upload.addEventListener("load", _.partial(transferComplete, deferred), false);
 
     xhr.open("POST", uri, true);
-    //xhr.setRequestHeader('X-CSRF-Token', CSRF_TOKEN);
+    xhr.setRequestHeader('X-CSRF-Token', CSRF_TOKEN);
 
     xhr.onload = function (e) {
       if (xhr.status >= 200 && xhr.status < 400) {
@@ -38,15 +37,8 @@ define(function (require) {
       }
     };
 
-    fd.append("file", data);
-
-    for (var key in fields) {
-      if (fields.hasOwnProperty(key)) {
-        fd.append(key, fields[key]);
-      }
-    }
     deferred.notify({message: "Processing…", completed: 0.0});
-    xhr.send(fd);
+    xhr.send(data);
     return deferred.promise;
   };
 

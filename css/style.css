@@ -1,7 +1,7 @@
 html, body {
     color: #505050;
     background-color: transparent;
-    font-family: 'Source Sans Pro', Helvetica, Arial, Verdana, sans-serif;
+    font-family: "Helvetica Neue", Helvetica, Arial, Verdana, sans-serif;
 }
 
 html.view, html.view body {
@@ -234,11 +234,13 @@ canvas {
     -ms-transition: opacity 0.5s ease-in-out;
     transition: opacity 0.5s ease-in-out;
 }
+
 .loading span  {
     margin-left: -2.5em;
     display: inline-block;
 }
-.loading img, .loading span {
+
+.loading i {
     position: relative;
     left: 50%;
     top: 50%;
@@ -293,6 +295,7 @@ a:hover img.icon {
 .tooltip.annotate {
     cursor: pointer;
     width: 35px;
+    text-align: center;
     padding: 9px;
     opacity: 0.75;
     -moz-box-shadow:    0 0 5px rgba(0,0,0,0.3);
@@ -305,6 +308,12 @@ a:hover img.icon {
     transition-property: opacity;
     transition-duration: 100ms;
     transition-timing-function: all;
+
+}
+
+.tooltip {
+    z-index: 100;
+    overflow: hidden;
 }
 
 .tooltip.annotate:hover {
@@ -312,18 +321,8 @@ a:hover img.icon {
 }
 
 .popup {
-    background: url('../img/pencil-trash-sprite.png') no-repeat top left;
     width: 18px;
     height: 18px;
-}
-
-.popup.pencil {
-    background-position: 0px 0px;
-}
-
-.popup.trash {
-    background-position: -28px -1px;
-    width: 15px;
 }
 
 div.editable:hover {

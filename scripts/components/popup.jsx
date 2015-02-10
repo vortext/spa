@@ -27,9 +27,9 @@ define(function (require) {
 	      left: options.x
       };
       var title = options.title || this.props.title;
-      return <span onMouseEnter={this.setVisible} onMouseLeave={this.setHidden} className="tooltip tip-top annotate" onClick={this.action} style={style} title={title}>
+      return <span onMouseEnter={this.setVisible} onMouseLeave={this.setHidden} className="tooltip annotate" onClick={this.action} style={style} title={title}>
         <div className={options.sprite} />
-	      <span className="nub"></span></span>;
+	      </span>;
     }
   });
 

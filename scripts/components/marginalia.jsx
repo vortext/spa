@@ -28,12 +28,12 @@ define(function (require) {
       } else {
         content = <span className="wrap">{text}</span>;
       }
-      var trashcan = <img className="trashcan icon" src="/static/img/trash-o_777777_14.png" alt="delete" title="Delete" />;
+      var remove = <i className="fa fa-remove" />;
 
       return <li>
                <p className="text-left" onMouseEnter={this.toggleHighlight} onMouseLeave={this.toggleHighlight}>
                  {content}
-                 {isActive ? <a onClick={this.destroy}>{trashcan}</a> : null}
+                 {isActive ? <a onClick={this.destroy}>{remove}</a> : null}
                </p>
              </li>;
     }

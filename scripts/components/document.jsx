@@ -53,7 +53,7 @@ define(function (require) {
               x: position.x,
               y: position.y,
               title: "Remove annotation",
-              sprite: "popup trash",
+              sprite: "popup fa fa-remove fa-lg",
               action: highlighted.destroy.bind(highlighted),
               visible: true}});
         }, 750, this);
@@ -67,7 +67,7 @@ define(function (require) {
       var $viewer = this.state.$viewer;
       var $popup = this.state.$popup;
 
-      var offsetFromTop = 45;
+      var offsetFromTop = 10;
       var boxTop = boundingBox.top + $viewer.scrollTop() - offsetFromTop;
       var boxLeft = boundingBox.left + $viewer.scrollLeft();
       var popupWidth = $popup.outerWidth();
@@ -99,7 +99,7 @@ define(function (require) {
         this.setState({
           popup: {
             action: this.emitAnnotation,
-            sprite: "popup pencil",
+            sprite: "popup fa-pencil fa fa-lg",
             title: "Annotate this",
             x: position.x,
             y: position.y,

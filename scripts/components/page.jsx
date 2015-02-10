@@ -155,7 +155,7 @@ define(function (require) {
       }
       return (
         <div className="page">
-          <div className="loading" style={{opacity: isLoading ? 1 : 0}}><img src="/static/img/loader.gif" /></div>
+          <div className="loading" style={{opacity: isLoading ? 1 : 0}}><i className="fa fa-spinner fa-spin" /></div>
           <canvas ref="canvas" />
           {textLayer}
         </div>);

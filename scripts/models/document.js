@@ -166,26 +166,23 @@ define(function (require) {
       this.trigger("annotation:add", annotations);
     },
     setActiveAnnotations: function(marginalia) {
-      // FIXME: UGLY HACK to set the active nodes based on the marginalia
       var annotations = {};
       var self = this;
       marginalia.each(function(marginalis) {
         if(!marginalis.get("active")) return; // only consider the active ones
-        var m =  marginalis.toJSON();
+        var m = marginalis.toJSON();
         marginalis.get("annotations").each(function(annotation) {
-          var a =  annotation.toJSON();
+          var a = annotation.toJSON();
           annotation.get("mapping").forEach(function(node) {
             var element = _.extend(_.clone(node), m, a);
             element.highlight = annotation.highlight.bind(annotation);
             element.destroy = annotation.destroy.bind(annotation);
             element.select = annotation.select.bind(annotation);
-
             annotations[node.pageIndex] = annotations[node.pageIndex] || {};
-            annotations[node.pageIndex][node.nodeIndex] = _.union(annotations[node.pageIndex][node.nodeIndex] || [], element);
+            annotations[node.pageIndex][node.nodeIndex] = _.union(annotations[node.pageIndex][node.nodeIndex] || [], [element]);
           });
         });
       });
-
       this.get("pages").map(function(page, pageIndex) {
         page.set({annotations: annotations[pageIndex] || {}});
       });

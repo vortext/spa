@@ -18,7 +18,7 @@ define(function (require) {
     deferred.notify({message: "Processing…", completed: NaN});
   }
 
-  var send = function(uri, data, fields) {
+  var upload = function(uri, data, fields) {
     var deferred = Q.defer();
     var xhr = new XMLHttpRequest();
     var fd = new FormData();
@@ -27,7 +27,7 @@ define(function (require) {
     xhr.upload.addEventListener("load", _.partial(transferComplete, deferred), false);
 
     xhr.open("POST", uri, true);
-    xhr.setRequestHeader('X-CSRF-Token', CSRF_TOKEN);
+    //xhr.setRequestHeader('X-CSRF-Token', CSRF_TOKEN);
 
     xhr.onload = function (e) {
       if (xhr.status >= 200 && xhr.status < 400) {
@@ -78,7 +78,7 @@ define(function (require) {
   };
 
   return {
-    send: send,
+    upload: upload,
     convertUriToBinary: convertUriToBinary,
     readFileAsBinary: readFileAsBinary
   };

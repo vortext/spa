@@ -3,11 +3,17 @@ define(function (require) {
   'use strict';
 
   var _ = require("underscore");
+  var $ = require("jquery");
+
   var React = require("react");
   var TextLayerBuilder = require("../helpers/textLayerBuilder");
   var Immutable = require("immutable");
 
+
   var TextNode = React.createClass({
+    triggerHighlight: function(uuid) {
+      $(window).trigger("highlight", uuid);
+    },
     shouldComponentUpdate: function(nextProps) {
       return !Immutable.is(nextProps.annotations, this.props.annotations);
     },
@@ -26,11 +32,18 @@ define(function (require) {
       if(o.spans) {
         content = o.spans.map(function(s,i) {
           if(!s) return null;
+
+          var highlight = function(e) {
+            self.triggerHighlight(s.uuid[0]);
+          };
+
           return <span key={i}>
                    <span className="pre">{s.pre}</span>
                    <span className="annotated"
                          style={s.style}
                          data-color={s.color}
+                         onMouseEnter={highlight}
+                         onMouseLeave={highlight}
                          data-uuid={s.uuid}>{s.content}</span>
                    <span className="post">{s.post}</span>
                   </span>;

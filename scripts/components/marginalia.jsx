@@ -3,11 +3,16 @@ define(function (require) {
   'use strict';
 
   var _ = require("underscore");
+  var $ = require("jquery");
+
   var React = require("react");
 
   var Editable = require("jsx!./editable");
 
   var Annotation = React.createClass({
+    highlight: function(uuid) {
+      $(window).trigger("highlight", this.props.annotation.get("uuid"));
+    },
     destroy: function() {
       this.props.annotation.destroy();
     },
@@ -29,7 +34,7 @@ define(function (require) {
       var remove = <i className="fa fa-remove remove" />;
 
       return (<li>
-               <p className="text-left">
+                <p className="text-left" onMouseEnter={this.highlight} onMouseLeave={this.highlight}>
                  {content}
                  {isActive ? <a onClick={this.destroy}>{remove}</a> : null}
                </p>

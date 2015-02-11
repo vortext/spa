@@ -94,6 +94,7 @@ body {
 
 .block {
     margin-bottom: 1.0em;
+    border: solid 1px #ddd;
 }
 
 .block ul.annotations {
@@ -157,9 +158,12 @@ body {
     font-size: 0.8rem;
 }
 
+.block .content li p {
+    line-height: 1rem;
+}
+
 .block .content {
     padding: 10px 20px;
-    border: solid 1px #ddd;
     border-top: none;
     background-color: white;
 }
@@ -283,6 +287,10 @@ canvas {
 
 .textLayer ::-moz-selection {
     background: rgb(0,0,255);
+}
+
+.highlight {
+    opacity: 1.0 !important;
 }
 
 .popup {

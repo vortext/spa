@@ -95,7 +95,8 @@ define(function (require) {
               right = text.length + (ann.range.upper - ann.interval.upper),
               end = next ?  right : text.length,
               style = {
-                "backgroundColor": "rgba(" + ann.color.join(",") + "," + (ann.highlighted ? 1.0 : 0.6) + ")"
+                "opacity": 0.5,
+                "backgroundColor": "rgb(" + ann.color.join(",") + ")"
               };
 
           return {

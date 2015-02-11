@@ -37,7 +37,16 @@ define(function (require) {
         }
       }
     },
+    toggleHighlights: function(e, uuid) {
+      var $annotations = this.state.$viewer.find("[data-uuid*="+uuid+"]");
+      $annotations.toggleClass("highlight");
+    },
+    componentWillUnmount: function() {
+      $(window).off("highlight", this.toggleHighlights);
+    },
     componentDidMount: function() {
+      $(window).on("highlight", this.toggleHighlights);
+
       var $viewer = $(this.refs.viewer.getDOMNode());
       this.setState({$viewer: $viewer});
     },

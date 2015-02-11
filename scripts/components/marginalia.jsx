@@ -11,31 +11,20 @@ define(function (require) {
     destroy: function() {
       this.props.annotation.destroy();
     },
-    select: function(annotation) {
-      this.props.annotation.select();
-    },
-    toggleHighlight: function() {
-      this.props.annotation.highlight();
-    },
     render: function() {
       var annotation = this.props.annotation;
       var text = annotation.get("content");
 
       var isActive = this.props.isActive;
-      var content;
-      if(isActive) {
-        content = <a className="wrap" title="Jump to annotation" onClick={this.select}>{text}</a> ;
-      } else {
-        content = <span className="wrap">{text}</span>;
-      }
+      var content = <span className="wrap">{text}</span>;
       var remove = <i className="fa fa-remove" />;
 
-      return <li>
-               <p className="text-left" onMouseEnter={this.toggleHighlight} onMouseLeave={this.toggleHighlight}>
+      return (<li>
+               <p className="text-left">
                  {content}
                  {isActive ? <a onClick={this.destroy}>{remove}</a> : null}
                </p>
-             </li>;
+              </li>);
     }
   });
 
@@ -67,7 +56,7 @@ define(function (require) {
         return <Annotation annotation={annotation} isActive={isActive} key={idx} />;
       });
 
-       return <div className="block">
+      return (<div className="block">
                <h4>
                  <a onClick={this.toggleActivate} style={style}>{marginalis.get("title")} </a>
                </h4>
@@ -76,7 +65,7 @@ define(function (require) {
                  <div className="divider"><a onClick={this.foldAnnotations}> {annotationsActive ? "▾" : "▸"}  annotations ({annotations.length})</a></div>
                  <ul className="no-bullet annotations" style={{"maxHeight": annotationsActive ? 500 : 0}} >{annotations}</ul>
                </div>
-             </div>;
+              </div>);
     }
   });
 

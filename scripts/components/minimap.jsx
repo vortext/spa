@@ -6,6 +6,7 @@ define(function (require) {
   var $ = require("jquery");
   var React = require("react");
   var TextLayerBuilder = require("../helpers/textLayerBuilder");
+  var Immutable = require("immutable");
 
   var VisibleArea = React.createClass({
     getInitialState: function() {
@@ -63,35 +64,24 @@ define(function (require) {
   });
 
   var TextSegments = React.createClass({
-    getInitialState: function() {
-      return {annotations: {}};
-    },
-    componentWillReceiveProps: function(nextProps) {
-      this.setState({annotations: nextProps.page.get("annotations")});
-    },
     shouldComponentUpdate: function(nextProps, nextState) {
-      function getNestedProperties(array, props) {
-        return _.map(_.flatten(_.values(array)), function(el) { return _.pick(el, props); });
-      }
-      var alpha = getNestedProperties(this.state.annotations, ["id"]);
-      var beta = getNestedProperties(nextState.annotations, ["id"]);
-      return !_.isEqual(alpha, beta);
+      return !Immutable.is(nextProps.annotations, this.props.annotations);
     },
     projectTextNodes: function(page, textLayerBuilder, factor) {
       // The basic idea here is using a sweepline to
       // project the 2D structure of the PDF onto a 1D minimap
       var self = this;
       var content = page.get("content");
-      var annotations = this.state.annotations;
+      var annotations = this.props.annotations.toJS();
 
       var nodes = content.items.map(function(geom, idx) {
         var style = textLayerBuilder.calculateStyles(geom, content.styles[geom.fontName]);
+        var color = !!annotations[idx] ? annotations[idx][0].color : null;
 
-        var elementAnnotations = annotations[idx];
         return {
           height: parseInt(style.fontSize, 10) / factor,
           position: parseInt(style.top, 10) / factor,
-          color: elementAnnotations && elementAnnotations[0].color
+          color:  color
         };
       });
 
@@ -153,13 +143,17 @@ define(function (require) {
   });
 
   var PageSegment = React.createClass({
+
     render: function() {
       var page = this.props.page;
-      var raw = page.get("raw");
-
       var textSegments = null;
       if(page.get("state") >= RenderingStates.HAS_CONTENT) {
-        textSegments = <TextSegments page={page} factor={this.props.factor} $viewer={this.props.$viewer} />;
+        textSegments = (
+            <TextSegments page={page}
+                          annotations={this.props.annotations}
+                          factor={this.props.factor}
+                          $viewer={this.props.$viewer} />)
+        ;
       }
       return <div className="minimap-node" style={this.props.style}>{textSegments}</div>;
     }
@@ -181,11 +175,14 @@ define(function (require) {
       var offset = $viewer.offset().top;
       var factor = totalHeight / ($viewer.height() - offset);
 
+      var annotations = this.props.annotations;
+
       var pageElements = pages.map(function(page, pageIndex) {
         return <PageSegment key={pageIndex}
                             page={page}
                             $viewer={$viewer}
                             factor={factor}
+                            annotations={annotations.get(pageIndex)}
                             style={{height: (totalHeight / numPages) / factor}} />;
       });
 

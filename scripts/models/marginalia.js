@@ -90,6 +90,9 @@ define(function (require) {
     setActive: function(marginalia) {
       this.each(function(marginalis) { marginalis.set("active", false, {silent: true}); });
       this.get(marginalia.cid).set("active", true);
+    },
+    getActive: function() {
+      return this.findWhere({active: true});
     }
   });
 

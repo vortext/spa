@@ -5,17 +5,20 @@ define(function (require) {
   var _ = require("underscore");
   var React = require("react");
   var TextLayerBuilder = require("../helpers/textLayerBuilder");
+  var Immutable = require("immutable");
 
   var TextNode = React.createClass({
-    shouldComponentUpdate: function(nextProps, nextState) {
-      var alpha = _.map(this.props.annotations, function(el) { return _.pick(el, "id", "highlight"); });
-      var beta = _.map(nextProps.annotations, function(el) { return _.pick(el, "id", "highlight"); });
-      return !_.isEqual(alpha, beta);
+    shouldComponentUpdate: function(nextProps) {
+      return !Immutable.is(nextProps.annotations, this.props.annotations);
     },
     render: function() {
       var p = this.props;
       var self = this;
-      var o = p.textLayerBuilder.createAnnotatedElement(p.item, p.styles, p.annotations);
+      var annotations;
+      if(this.props.annotations) {
+        annotations = this.props.annotations.toJS();
+      }
+      var o = p.textLayerBuilder.createAnnotatedElement(p.item, p.styles, annotations);
 
       if(o.isWhitespace) { return null; }
 
@@ -23,15 +26,9 @@ define(function (require) {
       if(o.spans) {
         content = o.spans.map(function(s,i) {
           if(!s) return null;
-          var highlight = p.annotations[0].highlight;
-          var select = p.annotations[0].select;
-
           return <span key={i}>
                    <span className="pre">{s.pre}</span>
                    <span className="annotated"
-                         onClick={select}
-                         onMouseEnter={highlight}
-                         onMouseLeave={highlight}
                          style={s.style}
                          data-uuid={s.uuid}>{s.content}</span>
                    <span className="post">{s.post}</span>
@@ -45,19 +42,8 @@ define(function (require) {
   });
 
   var TextLayer = React.createClass({
-    getInitialState: function() {
-      return {annotations: {}};
-    },
-    componentWillReceiveProps: function(nextProps) {
-      this.setState({annotations: nextProps.page.get("annotations")});
-    },
     shouldComponentUpdate: function(nextProps, nextState) {
-      function getNestedProperties(array, props) {
-        return _.map(_.flatten(_.values(array)), function(el) { return _.pick(el, props); });
-      }
-      var alpha = getNestedProperties(this.state.annotations, ["id", "highlighted"]);
-      var beta = getNestedProperties(nextState.annotations, ["id", "highlighted"]);
-      return !_.isEqual(alpha, beta);
+      return !Immutable.is(nextProps.annotations, this.props.annotations);
     },
     getTextLayerBuilder: function(viewport) {
       return new TextLayerBuilder({viewport: viewport});
@@ -67,12 +53,12 @@ define(function (require) {
       var self = this;
       var content = page.get("content");
       var textLayerBuilder = this.getTextLayerBuilder(this.props.viewport);
-      var annotations = this.state.annotations;
+      var annotations = this.props.annotations;
       var styles = content.styles;
       var textNodes = content.items.map(function (item,i) {
         return <TextNode key={i}
                          item={item}
-                         annotations={annotations[i]}
+                         annotations={annotations.get("" + i)}
                          styles={styles}
                          textLayerBuilder={textLayerBuilder} />;
       });
@@ -92,7 +78,7 @@ define(function (require) {
     },
     componentWillReceiveProps: function(nextProps) {
       this.setState({renderingState: nextProps.page.get("state")});
-      if(this.props.key !== nextProps.key) {
+      if(this.props.key < RenderingStates.FINISHED) {
         this.setState({isRendered: false});
       }
     },
@@ -151,11 +137,14 @@ define(function (require) {
       if(this.state.viewport && renderingState >= RenderingStates.HAS_CONTENT) {
         textLayer = <TextLayer dimensions={this.state.dimensions}
                                viewport={this.state.viewport}
+                               annotations={this.props.annotations}
                                page={this.props.page} />;
       }
       return (
         <div className="page">
-          <div className="loading" style={{opacity: isLoading ? 1 : 0}}><i className="fa fa-spinner fa-spin" /></div>
+          <div className="loading" style={{opacity: isLoading ? 1 : 0}}>
+            <i className="fa fa-spinner fa-spin" />
+          </div>
           <canvas ref="canvas" />
           {textLayer}
         </div>);

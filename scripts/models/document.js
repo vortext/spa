@@ -167,6 +167,7 @@ define(function (require) {
       }, function(arg) {
         return JSON.stringify(arg) + self.get("fingerprint");
       });
+
       var annotationsPerPage = getAnnotationsPerPage(annotations);
       self.get("pages").map(function(page, pageIndex) {
         page.set({annotations: annotationsPerPage[pageIndex] || []});

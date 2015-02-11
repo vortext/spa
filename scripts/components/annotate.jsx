@@ -53,22 +53,21 @@ define(function (require) {
       var $popup = $(this.refs.popup.getDOMNode());
       var $container = $popup.parent();
 
-      var offsetFromTop = 45;
       var selectionBox = window.document.getSelection().getRangeAt(0).getBoundingClientRect();
-      var selectionLeft = selectionBox.left + $container.scrollLeft();
-      var selectionTop = selectionBox.top + $container.scrollTop() - offsetFromTop;
+      var selectionLeft = selectionBox.left + $container.scrollLeft() - $container.offset().left;
+      var selectionTop = selectionBox.top + $container.scrollTop() - $container.offset().top;
       var buttonWidth = $popup.outerWidth();
 
       var left, top;
       if(mouseX) {
-        left = Math.min(Math.max(mouseX, selectionLeft+buttonWidth/2),
-                        selectionLeft+selectionBox.width-buttonWidth/2);
+        left = Math.min(Math.max(mouseX, selectionLeft + (buttonWidth/2)),
+                        selectionLeft + selectionBox.width - (buttonWidth/2));
       } else {
-        left = selectionLeft + selectionBox.width/2;
+        left = selectionLeft + (selectionBox.width/2);
       }
 
-      left -= buttonWidth/2;
-      top = selectionTop-2-$popup.outerHeight();
+      left = left - (buttonWidth/2);
+      top = selectionTop - 2 - $popup.outerHeight();
 
       this.setState(
         {visible: true,

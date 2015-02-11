@@ -38,10 +38,8 @@ define(function (require) {
         );
       } else {
         return (
-            <div className="row collapse">
-            <div className="editable small-12 columns" onClick={this.edit}>
+            <div className="editable" onClick={this.edit}>
               <span dangerouslySetInnerHTML={{__html: Marked(content)}}></span>
-            </div>
             </div>);
       }
     }

@@ -26,7 +26,7 @@ define(function (require) {
         content = <span className="wrap">{text}</span>;
       }
 
-      var remove = <i className="fa fa-remove" />;
+      var remove = <i className="fa fa-remove remove" />;
 
       return (<li>
                <p className="text-left">
@@ -65,13 +65,15 @@ define(function (require) {
         return <Annotation annotation={annotation} isActive={isActive} key={idx} />;
       });
 
+      var divider =  (annotationsActive ? "▾" : "▸") +  " annotations (" + annotations.length + ")";
+
       return (<div className="block">
                <h4>
                  <a onClick={this.toggleActivate} style={style}>{marginalis.get("title")} </a>
                </h4>
                <div className="content">
                  <Editable content={description} callback={this.setDescription} />
-                 <div className="divider"><a onClick={this.foldAnnotations}> {annotationsActive ? "▾" : "▸"}  annotations ({annotations.length})</a></div>
+                 <div className="divider"><a onClick={this.foldAnnotations}>{divider}</a></div>
                  <ul className="no-bullet annotations" style={{"maxHeight": annotationsActive ? 500 : 0}} >{annotations}</ul>
                </div>
               </div>);

@@ -95,7 +95,7 @@ define(function (require) {
           continue;
         }
 
-        if((prevSegment.position + prevSegment.height) >= node.position) {
+        if((prevSegment.position + prevSegment.height) > node.position) {
           prevSegment = segments.pop();
           var nextHeight =  prevSegment.height +
                 ((node.height + node.position) - (prevSegment.height + prevSegment.position));

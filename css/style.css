@@ -1,20 +1,15 @@
 html, body {
     color: #505050;
-    background-color: transparent;
-    font-family: "Helvetica Neue", Helvetica, Arial, Verdana, sans-serif;
+    font-family: "Open Sans","Source Sans Pro",Helvetica,Arial,Verdana,sans-serif
 }
 
-html.view, html.view body {
+body {
+    background-color: #f5f5f5;
     overflow: hidden;
 }
 
-h1, h2, h3, h4, h5, h6, h7 {
-    font-family: 'Montserrat', 'Source Sans Pro', 'Helvetica', sans-serif;
-    font-weight: 700;
-}
-
-.columns.fourty {
-    height: 40px !important
+.page, .block {
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.05);
 }
 
 .viewer-container {
@@ -23,24 +18,26 @@ h1, h2, h3, h4, h5, h6, h7 {
 
 .viewer {
     position: absolute;
-    width: 65%;
+    width: 60%;
     height: 100%;
     overflow-y: scroll;
     overflow-x: hidden;
-    left: 40px;
-    padding-right: 30px;
+    left: 75px;
+    padding-right: 40px;
+    padding-top: 2em;
 }
 
 .minimap {
     position: absolute;
     height: 100%;
-    margin: 0 5px 0 5px;
+    margin: 2em 5px 0 25px;
+    background-color: white;
 }
 
 .minimap-node {
-    width: 30px;
+    width: 20px;
     position: relative;
-    background-color: #e5e5e5;
+    background-color: #f0f0f0;
     margin-bottom: 1px;
 }
 
@@ -49,7 +46,7 @@ h1, h2, h3, h4, h5, h6, h7 {
     position: absolute;
     right: 0;
     left: 0;
-    background-color: rgba(0,0,0,0.05);
+    background-color: rgba(0,0,0,0.04);
 }
 
 .minimap:hover,
@@ -73,29 +70,30 @@ h1, h2, h3, h4, h5, h6, h7 {
     z-index: 2;
     margin-left: -5px;
     opacity: 0.2;
-    width: 40px;
+    width: 30px;
     position: absolute;
     left: 0;
     right: 0;
 }
 
 #side {
+    padding: 0 1em 0 1em;
+    background-color: #f5f5f5;
     position: absolute;
-    border-left: 1px solid #ddd;
     z-index: 1000;
-    background-color: white;
-    left: calc(65% - 15px);
-    width: calc(35% + 15px);
+    left: calc(65% - 25px);
+    width: calc(35% + 25px);
     height: 100%;
     overflow: auto;
 }
 
 #marginalia {
+    margin-top: 2em;
     margin-bottom: 5em;
 }
 
 .block {
-    margin: 1.0em;
+    margin-bottom: 1.0em;
 }
 
 .block ul.annotations {
@@ -109,8 +107,7 @@ h1, h2, h3, h4, h5, h6, h7 {
 }
 
 .block .annotations p {
-    font-size: small;
-    color: #777;
+    color: #505050;
 }
 
 .block ul.annotations li .wrap {
@@ -124,7 +121,6 @@ h1, h2, h3, h4, h5, h6, h7 {
 
 .block h4 {
     margin: 0;
-    font-weight: 400;
     padding: 0;
     cursor: pointer;
     -webkit-user-select: none; /* Chrome/Safari */
@@ -135,6 +131,7 @@ h1, h2, h3, h4, h5, h6, h7 {
 }
 
 .block h4 {
+    color: #505050;
     background-color: #e5e5e5;
 }
 
@@ -143,40 +140,29 @@ h1, h2, h3, h4, h5, h6, h7 {
 }
 
 .block h4 a {
-    font-family: 'Montserrat', 'Source Sans Pro', sans-serif;
+    font-weight: 600;
     display: block;
     background-color: inherit;
-    min-height: 60px;
-    line-height: 21px;
-    font-size: 16px;
+    font-size: 14px;
     padding: 10px 20px;
     color: #444;
-
-    -webkit-transition-property: box-shadow;
-    -webkit-transition-duration: 100ms;
-    -webkit-transition-timing-function: ease-out;
-    transition-property: box-shadow;
-    transition-duration: 100ms;
-    transition-timing-function: ease-out;
 }
+
 
 .block h4 a:hover {
     background-color: inherit;
-    -moz-box-shadow:    inset 0 0 10px rgba(0,0,0,0.1);
-    -webkit-box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
-    box-shadow:         inset 0 0 10px rgba(0,0,0,0.1);
+}
+
+.block .content *  {
+    font-size: 0.8rem;
 }
 
 .block .content {
     padding: 10px 20px;
     border: solid 1px #ddd;
     border-top: none;
+    background-color: white;
 }
-
-.block .content .editable {
-    height: 57px;
-}
-
 
 .block .divider {
     position: relative;
@@ -198,6 +184,17 @@ h1, h2, h3, h4, h5, h6, h7 {
     margin-left: 10px;
 }
 
+.block .content .remove {
+    float: right;
+    color: #505050;
+    opacity: 0.6;
+    line-height: 1.8em;
+}
+
+.block .content .remove:hover {
+    opacity: 1.0;
+}
+
 div.editable:hover {
     text-shadow: 0 0 5px #fff, 0 0 15px #ffff00;
     cursor: pointer;
@@ -216,7 +213,7 @@ canvas {
     background-color: white;
     background-clip: content-box;
     position: relative;
-    border-bottom: 1px solid #ddd;
+    border: 1px solid #ddd;
     margin-bottom: 1em;
 }
 

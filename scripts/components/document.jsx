@@ -29,6 +29,13 @@ define(function (require) {
       if($viewer) {
         if(nextState.fingerprint !== this.state.fingerprint) {
           $viewer.scrollTop(0);
+        } else {
+          if(nextState.select) {
+            var delta = $viewer.find("[data-uuid*="+ nextState.select + "]").offset().top;
+            var viewerHeight = $viewer.height();
+            var center = viewerHeight / 2;
+            $viewer.animate({scrollTop: $viewer.scrollTop() + delta - center});
+          }
         }
       }
     },

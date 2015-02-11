@@ -11,12 +11,21 @@ define(function (require) {
     destroy: function() {
       this.props.annotation.destroy();
     },
+    select: function(annotation) {
+      this.props.annotation.select();
+    },
     render: function() {
       var annotation = this.props.annotation;
       var text = annotation.get("content");
 
       var isActive = this.props.isActive;
-      var content = <span className="wrap">{text}</span>;
+      var content;
+      if(isActive) {
+        content = <a className="wrap" title="Jump to annotation" onClick={this.select}>{text}</a> ;
+      } else {
+        content = <span className="wrap">{text}</span>;
+      }
+
       var remove = <i className="fa fa-remove" />;
 
       return (<li>

@@ -67,7 +67,7 @@ define(function (require) {
           return content;
         });
     },
-    annotate: function(annotation, color) {
+    annotate: function(annotation, color, uuid) {
       self = this;
       var aggregate = this._aggregate;
       var text = aggregate.text;
@@ -97,6 +97,7 @@ define(function (require) {
 
         return mapping.map(function(m) {
           m.color = color;
+          m.uuid = annotation.uuid;
           return m;
         });
       }
@@ -150,8 +151,7 @@ define(function (require) {
       var self = this; // *sigh*
       var annotations = marginalia.get("annotations").toJSON();
 
-      // fml
-      var getAnnotationsPerPage = function(annotations) {
+      var getAnnotationsPerPage = _.memoize(function(annotations) {
         var color = marginalia.get("color");
         var mappings = _.flatten(annotations.map(function(annotation) {
           return self.get("pages").annotate(annotation, color);
@@ -164,7 +164,9 @@ define(function (require) {
             _.union(result[mapping.pageIndex][mapping.nodeIndex] || [], [mapping]);;
         });
         return result;
-      };
+      }, function(arg) {
+        return JSON.stringify(arg) + self.get("fingerprint");
+      });
       var annotationsPerPage = getAnnotationsPerPage(annotations);
       self.get("pages").map(function(page, pageIndex) {
         page.set({annotations: annotationsPerPage[pageIndex] || []});

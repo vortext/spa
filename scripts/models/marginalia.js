@@ -28,6 +28,14 @@ define(function (require) {
     return str.replace(/ /g, "-").toLowerCase();
   };
 
+  var guid = function() {
+    // RFC4122 version 4 compliant
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16|0, v = c == 'x' ? r : (r&0x3|0x8);
+      return v.toString(16);
+    });
+  };
+
   var Annotations = Backbone.Collection.extend({
     model: Annotation
   });
@@ -93,6 +101,16 @@ define(function (require) {
     },
     getActive: function() {
       return this.findWhere({active: true});
+    },
+    addAnnotation: function(content) {
+      var marginalia = this.getActive();
+      if(!marginalia) return;
+      var annotations = marginalia.get("annotations");
+
+      annotations.add(new Annotation({
+        content: content,
+        uuid: guid()
+      }));
     }
   });
 

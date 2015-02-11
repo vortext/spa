@@ -6,7 +6,7 @@ define(function (require) {
   var $ = require("jquery");
   var React = require("react");
 
-  var Popup = require("jsx!./popup");
+  var Annotate = require("jsx!./annotate");
   var Minimap = require("jsx!./minimap");
   var Page = require("jsx!./page");
   var TextUtil = require("../helpers/textUtil");
@@ -43,6 +43,7 @@ define(function (require) {
     },
     render: function() {
       var pdf = this.props.pdf;
+      var marginalia = this.props.marginalia;
 
       var fingerprint = this.state.fingerprint;
       var pages = pdf.get("pages");
@@ -59,7 +60,8 @@ define(function (require) {
         <div>
           <Minimap $viewer={this.state.$viewer} pdf={pdf} annotations={annotations} />
           <div className="viewer-container">
-            <div className="viewer"ref="viewer">
+            <div className="viewer" ref="viewer">
+               <Annotate marginalia={marginalia} />
                {pagesElements}
              </div>
            </div>

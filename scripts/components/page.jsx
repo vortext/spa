@@ -30,6 +30,7 @@ define(function (require) {
                    <span className="pre">{s.pre}</span>
                    <span className="annotated"
                          style={s.style}
+                         data-color={s.color}
                          data-uuid={s.uuid}>{s.content}</span>
                    <span className="post">{s.post}</span>
                   </span>;

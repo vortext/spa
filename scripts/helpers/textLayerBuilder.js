@@ -72,7 +72,8 @@ define(function (require) {
       if(!annotations || textElement.isWhitespace) {
         textElement.spans = textElement.annotations = null;
       } else {
-        textElement.color = annotations[0].color;
+        var color = annotations[0].color;
+        textElement.color = color;
 
         var sorted = _.sortBy(annotations, function(ann) {// sorted by range offset
           return ann.range.lower;
@@ -102,6 +103,7 @@ define(function (require) {
             content:text.slice(left, right),
             post: text.slice(right, end),
             style: style,
+            color: color,
             uuid: _.pluck(annotations, "uuid")
           };
         });

@@ -63,25 +63,46 @@ define(function (require) {
     }
   });
 
+  var TextSegment = React.createClass({
+    shouldComponentUpdate: function(nextProps, nextState) {
+      return !Immutable.is(nextProps.annotation, this.props.annotation);
+    },
+    render: function() {
+      var segment = this.props.segment;
+      var annotation  = this.props.annotation;
+        var style = {
+          "top": (Math.ceil(segment.position) | 0) + "px",
+          "height": (Math.ceil(segment.height) | 0) + "px"
+        };
+
+      if(annotation) {
+        var color = annotation.getIn(["0", "color"]).join(",");
+        style.backgroundColor = "rgb(" + color + ")";
+      }
+      return <div className="text-segment" style={style}></div>;
+    }
+  });
+
   var TextSegments = React.createClass({
     shouldComponentUpdate: function(nextProps, nextState) {
       return !Immutable.is(nextProps.annotations, this.props.annotations);
     },
-    projectTextNodes: function(page, textLayerBuilder, factor) {
+    projectTextNodes: _.memoize(function(page, fingerprint, viewport, factor) {
+      console.log("projecting");
       // The basic idea here is using a sweepline to
       // project the 2D structure of the PDF onto a 1D minimap
       var self = this;
       var content = page.get("content");
-      var annotations = this.props.annotations.toJS();
+
+      var textLayerBuilder = new TextLayerBuilder({viewport: viewport});
 
       var nodes = content.items.map(function(geom, idx) {
         var style = textLayerBuilder.calculateStyles(geom, content.styles[geom.fontName]);
-        var color = !!annotations[idx] ? annotations[idx][0].color : null;
 
         return {
           height: parseInt(style.fontSize, 10) / factor,
           position: parseInt(style.top, 10) / factor,
-          color:  color
+          idx: [idx]
         };
       });
 
@@ -99,12 +120,12 @@ define(function (require) {
           prevSegment = segments.pop();
           var nextHeight =  prevSegment.height +
                 ((node.height + node.position) - (prevSegment.height + prevSegment.position));
-          var nextColor = prevSegment.color ? prevSegment.color : node.color;
+          var nextIdx = _.union(prevSegment.idx, node.idx);
 
           var nextSegment = {
             height: nextHeight,
             position: prevSegment.position,
-            color: nextColor
+            idx: nextIdx
           };
           segments.push(_.extend(node, nextSegment));
         } else {
@@ -112,30 +133,25 @@ define(function (require) {
         }
       }
       return segments;
-    },
-
+    }, function(page, fingerprint) { return fingerprint + page.get("raw").pageIndex; }) ,
     render: function() {
       var page = this.props.page;
       var raw = page.get("raw");
 
       var factor = this.props.factor;
+      var annotations = this.props.annotations;
 
       var viewport = raw.getViewport(1.0);
       var pageWidthScale = this.props.$viewer.width() / viewport.width;
       viewport = raw.getViewport(pageWidthScale);
 
-      var textLayerBuilder = new TextLayerBuilder({viewport: viewport});
-      var textNodes = this.projectTextNodes(page, textLayerBuilder, factor);
+      var fingerprint = raw.transport.pdfDocument.pdfInfo.fingerprint; // hack
+
+      var textNodes = this.projectTextNodes(page, fingerprint, viewport, factor);
 
       var textSegments = textNodes.map(function(segment, idx) {
-        var style = {
-          "top": (Math.ceil(segment.position) | 0) + "px",
-          "height": (Math.ceil(segment.height) | 0) + "px"
-        };
-        if(segment.color) {
-          style.backgroundColor = "rgb(" + segment.color + ")";
-        }
-        return <div key={idx} className="text-segment" style={style} />;
+        var nodeIdx = _.first(segment.idx) + "";
+        return <TextSegment key={idx}  segment={segment} annotation={annotations.get(nodeIdx)} />;
       });
 
       return <div>{textSegments}</div>;

@@ -18,7 +18,7 @@ define(function (require) {
     for (var i = 0, len = childNodes.length; i < len; i++) {
       strArr.push(childNodes[i].textContent);
     }
-    return strArr.join(" ");
+    return strArr.join(" ").trim();
   };
 
   var timeout = null;

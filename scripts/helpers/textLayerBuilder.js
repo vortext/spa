@@ -105,7 +105,7 @@ define(function (require) {
             post: text.slice(right, end),
             style: style,
             color: color,
-            uuid: _.pluck(annotations, "uuid")
+            uuid: ann.uuid
           };
         });
         textElement.spans = spans;

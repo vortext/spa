@@ -34,7 +34,7 @@ define(function (require) {
           if(!s) return null;
 
           var highlight = function(e) {
-            self.triggerHighlight(s.uuid[0]);
+            self.triggerHighlight(s.uuid);
           };
 
           return <span key={i}>

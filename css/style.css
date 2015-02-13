@@ -304,8 +304,10 @@ canvas {
     text-align: center;
     padding: 2px;
     line-height: 1.7em;
-    border-radius: 2px;
-    opacity: 0.8;
+    opacity: 0.75;
+    -moz-box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    -webkit-box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
 }
 
 .popup:hover {

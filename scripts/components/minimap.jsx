@@ -88,7 +88,6 @@ define(function (require) {
       return !Immutable.is(nextProps.annotations, this.props.annotations);
     },
     projectTextNodes: _.memoize(function(page, fingerprint, viewport, factor) {
-      console.log("projecting");
       // The basic idea here is using a sweepline to
       // project the 2D structure of the PDF onto a 1D minimap
       var self = this;
@@ -102,7 +101,7 @@ define(function (require) {
         return {
           height: parseInt(style.fontSize, 10) / factor,
           position: parseInt(style.top, 10) / factor,
-          idx: [idx]
+          idx: [idx + ""]
         };
       });
 
@@ -116,11 +115,11 @@ define(function (require) {
           continue;
         }
 
-        if((prevSegment.position + prevSegment.height) > node.position) {
+        if((prevSegment.position + prevSegment.height) >= node.position) {
           prevSegment = segments.pop();
           var nextHeight =  prevSegment.height +
                 ((node.height + node.position) - (prevSegment.height + prevSegment.position));
-          var nextIdx = _.union(prevSegment.idx, node.idx);
+          var nextIdx = _.union(prevSegment.idx, [node.idx + ""]);
 
           var nextSegment = {
             height: nextHeight,
@@ -149,9 +148,10 @@ define(function (require) {
 
       var textNodes = this.projectTextNodes(page, fingerprint, viewport, factor);
 
+      var annotated = annotations.keySeq().toArray();
       var textSegments = textNodes.map(function(segment, idx) {
-        var nodeIdx = _.first(segment.idx) + "";
-        return <TextSegment key={idx}  segment={segment} annotation={annotations.get(nodeIdx)} />;
+        var ann = _.first(_.intersection(annotated, segment.idx));
+        return <TextSegment key={idx} segment={segment} annotation={annotations.get(ann)} />;
       });
 
       return <div>{textSegments}</div>;

@@ -17,7 +17,12 @@ define(function (require) {
   var PDFJSUrl = require.toUrl('PDFJS');
 
   PDFJS.workerSrc = PDFJSUrl + ".worker.js";
-  PDFJS.disableWebGL = !Modernizr.webgl;
+
+  PDFJS.cMapUrl = PDFJSUrl.replace(/\/pdf$/, '') + '/generic/web/cmaps/';
+  PDFJS.cMapPacked = true;
+
+  PDFJS.disableWebGL = false;
+
 
   var Document = React.createClass({
     getInitialState: function() {

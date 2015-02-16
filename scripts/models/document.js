@@ -147,8 +147,13 @@ define(function (require) {
       });
     },
     annotate: function(marginalia) {
-      if(!marginalia) return;
       var self = this; // *sigh*
+      if(!marginalia) {
+        self.get("pages").map(function(page, pageIndex) {
+          page.set({annotations: []});
+        });
+        return;
+      }
       var annotations = marginalia.get("annotations").toJSON();
 
       var getAnnotationsPerPage = _.memoize(function(annotations) {
@@ -161,7 +166,7 @@ define(function (require) {
         mappings.forEach(function(mapping) {
           result[mapping.pageIndex] = result[mapping.pageIndex] || {};
           result[mapping.pageIndex][mapping.nodeIndex] =
-            _.union(result[mapping.pageIndex][mapping.nodeIndex] || [], [mapping]);;
+            _.union(result[mapping.pageIndex][mapping.nodeIndex] || [], [mapping]);
         });
         return result;
       }, function(arg) {

@@ -32,9 +32,7 @@ define(function (require) {
     componentWillUpdate: function(nextProps, nextState) {
       var $viewer = this.state.$viewer;
       if($viewer) {
-        if(nextState.fingerprint !== this.state.fingerprint) {
-          $viewer.scrollTop(0);
-        }else if(nextState.select !== this.state.select) {
+        if(nextState.select !== this.state.select) {
           var delta = $viewer.find("[data-uuid*="+ nextState.select + "]").offset().top;
           var viewerHeight = $viewer.height();
           var center = viewerHeight / 2;

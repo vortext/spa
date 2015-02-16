@@ -7,24 +7,16 @@ define(function (require) {
   var Backbone = require("backbone");
   var Annotation = require('./annotation');
 
-  var colors = // from Cynthia Brewer (ColorBrewer)
-        [[102,166,30],
-         [230,171,2],
-         [117,112,179],
-         [27,158,119],
-         [217,95,2],
-         [231,41,138],
-         [166,118,29],
-         [27,158,119],
-         [217,95,2],
-         [117,112,179],
-         [231,41,138],
-         [102,166,30],
-         [230,171,2],
-         [166,118,29],
-         [102,102,102]];
+  var colors=[
+    [168,191,18],
+    [0,170,181],
+    [255,159,0],
+    [244,28,84],
+    [0,67,88],
+    [191,4,38],
+  ];
 
-  function toClassName(str) {
+  var toClassName = function(str) {
     return str.replace(/ /g, "-").toLowerCase();
   };
 
@@ -46,6 +38,7 @@ define(function (require) {
       description: "",
       color: null,
       title: null,
+      type: "",
       active: false
     },
     initialize: function(data) {
@@ -95,9 +88,11 @@ define(function (require) {
         }
       });
     }, 2500),
-    setActive: function(marginalia) {
+    toggleActive: function(marginalia) {
+      var isActive = !!marginalia.get("active");
       this.each(function(marginalis) { marginalis.set("active", false, {silent: true}); });
-      this.get(marginalia.cid).set("active", true);
+      marginalia.set("active", !isActive, {silent: true});
+      this.trigger("change:active");
     },
     getActive: function() {
       return this.findWhere({active: true});

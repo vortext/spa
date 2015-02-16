@@ -26,32 +26,23 @@ define(function (require) {
       var isActive = this.props.isActive;
       var content;
       if(isActive) {
-        content = <a className="wrap" title="Jump to annotation" onClick={this.select}>{text}</a> ;
+        content = (<a className="wrap" onClick={this.select}>{text}</a>);
       } else {
-        content = <span className="wrap">{text}</span>;
+        content = (<span className="wrap">{text}</span>);
       }
 
       var remove = <i className="fa fa-remove remove" />;
 
       return (<li onMouseEnter={this.highlight} onMouseLeave={this.highlight}>
-                <p className="text-left">
-                 {content}
-                 {isActive ? <a onClick={this.destroy}>{remove}</a> : null}
-               </p>
+               <p className="text-left">{content} {isActive ? <a onClick={this.destroy}>{remove}</a> : null}</p>
               </li>);
     }
   });
 
-  var Block = React.createClass({
-    getInitialState: function() {
-      return { annotationsActive: false };
-    },
+  var Marginalis = React.createClass({
     toggleActivate: function(e) {
       var marginalia = this.props.marginalia;
-      marginalia.setActive(this.props.marginalis);
-    },
-    foldAnnotations: function() {
-      this.setState({annotationsActive: !this.state.annotationsActive});
+      marginalia.toggleActive(this.props.marginalis);
     },
     setDescription: function(val) {
       this.props.marginalis.set("description", val);
@@ -60,7 +51,6 @@ define(function (require) {
       var marginalis = this.props.marginalis;
       var description = marginalis.get("description");
       var isActive = marginalis.get("active");
-      var annotationsActive = this.state.annotationsActive;
       var style = {
         "backgroundColor": isActive ? "rgb(" + marginalis.get("color") + ")" : "inherit",
         "color": isActive ? "white" : "inherit"
@@ -70,16 +60,15 @@ define(function (require) {
         return <Annotation annotation={annotation} isActive={isActive} key={idx} />;
       });
 
-      var divider =  (annotationsActive ? "▾" : "▸") +  " annotations (" + annotations.length + ")";
+      var icon = isActive ? <i className="fa fa-eye-slash right"></i> :  <i className="fa fa-eye right"></i>;
 
       return (<div className="block">
                <h4>
-                 <a onClick={this.toggleActivate} style={style}>{marginalis.get("title")} </a>
+                 <a onClick={this.toggleActivate} style={style}>{marginalis.get("title")}{icon}</a>
                </h4>
-               <div className="content">
+               <div className="content" style={{display: isActive ? "block" : "none"}}>
                  <Editable content={description} callback={this.setDescription} />
-                 <div className="divider"><a onClick={this.foldAnnotations}>{divider}</a></div>
-                 <ul className="no-bullet annotations" style={{"maxHeight": annotationsActive ? 500 : 0}} >{annotations}</ul>
+                 <ul className="no-bullet annotations">{annotations}</ul>
                </div>
               </div>);
     }
@@ -88,10 +77,16 @@ define(function (require) {
   var Marginalia = React.createClass({
     render: function() {
       var marginalia = this.props.marginalia;
-      var blocks = marginalia.map(function(marginalis, idx) {
-        return <Block key={idx} marginalia={marginalia} marginalis={marginalis}  />;
+      var grouped = marginalia.groupBy(function(m) { return m.get("type"); });
+
+      var groups = _.map(grouped, function(group, type) {
+        var blocks = marginalia.map(function(marginalis, idx) {
+          return <Marginalis key={idx} marginalia={marginalia} marginalis={marginalis}  />;
+        });
+        return <div key={type} className="group"><h6 className="subheader">{type}</h6>{blocks}</div>;
       });
-      return (<div>{blocks}</div>);
+
+      return <div>{groups}</div>;
     }
   });
 

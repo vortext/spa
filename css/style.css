@@ -11,6 +11,16 @@ body {
     box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
 }
 
+.title-area h1 span {
+    font-variant: small-caps;
+    letter-spacing: -0.025em;
+    font-weight: 300;
+}
+
+.title-area img {
+    margin-right: 4px;
+}
+
 .viewer-container {
     overflow: hidden;
 }
@@ -53,17 +63,18 @@ body {
 
 .minimap:hover .visible-area,
 .minimap:active .visible-area {
-    opacity: 0.3;
+    opacity: 0.4;
     cursor: pointer;
 }
 .minimap .visible-area:hover,
 .minimap .visible-area:active {
-    opacity: 0.4;
+    opacity: 0.5;
     cursor: pointer;
 }
 
 .minimap .visible-area {
-    background-color: rgba(0,0,0,0.3);
+    background-color: #000;
+    opacity: 0.3;
     z-index: 2;
     width: 15px;
     position: absolute;
@@ -98,23 +109,13 @@ body {
     border: solid 1px #ddd;
 }
 
-.block ul.annotations {
-    margin-bottom: 0;
-    overflow-y: hidden;
-    overflow-x: auto;
-
-	  -webkit-transition: max-height 0.3s ease-in-out;
-	  -moz-transition: max-height 0.3s ease-in-out;
-	  transition: max-height 0.3s ease-in-out;
-}
-
-.block .annotations p {
-    color: #505050;
+.block ul.annotations li  {
+    margin-bottom: 0.6rem;
 }
 
 .block ul.annotations li .wrap {
     display: inline-block;
-    width: 90%;
+    width: 95%;
     white-space: nowrap;
     overflow: hidden;
     vertical-align: middle;
@@ -152,7 +153,7 @@ body {
     background-color: inherit;
     font-size: 14px;
     padding: 10px 20px;
-    color: #444;
+    color: #505050;
     margin: -1px;
 }
 
@@ -162,7 +163,6 @@ body {
 
 .block .content *  {
     font-size: 0.8rem;
-    line-height: 0.9rem;
 }
 
 .block .content {

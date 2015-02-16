@@ -34,8 +34,8 @@ define(function (require) {
       var remove = <i className="fa fa-remove remove" />;
 
       return (<li onMouseEnter={this.highlight} onMouseLeave={this.highlight}>
-               <p className="text-left">{content} {isActive ? <a onClick={this.destroy}>{remove}</a> : null}</p>
-              </li>);
+               {content} {isActive ? <a onClick={this.destroy}>{remove}</a> : null}
+             </li>);
     }
   });
 

@@ -17,13 +17,12 @@ body {
 
 .viewer {
     position: absolute;
-    width: calc(70% - 40px);
+    width: calc(70% - 55px);
+    left: 55px;
     height: 100%;
     overflow-y: scroll;
     overflow-x: hidden;
-    left: 55px;
-    padding-right: 40px;
-    line-height: 1.2em;
+    padding-right: 20px;
 }
 
 .minimap {

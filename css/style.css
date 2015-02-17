@@ -11,16 +11,6 @@ body {
     box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
 }
 
-.title-area h1 span {
-    font-variant: small-caps;
-    letter-spacing: -0.025em;
-    font-weight: 300;
-}
-
-.title-area img {
-    margin-right: 4px;
-}
-
 .viewer-container {
     overflow: hidden;
 }
@@ -33,6 +23,7 @@ body {
     overflow-x: hidden;
     left: 55px;
     padding-right: 40px;
+    line-height: 1.2em;
 }
 
 .minimap {
@@ -174,7 +165,7 @@ body {
 .block .content .remove {
     float: right;
     color: #505050;
-    opacity: 0.6;
+    opacity: 0.4;
     line-height: 1.8em;
 }
 

@@ -80,7 +80,7 @@ define(function (require) {
       var grouped = marginalia.groupBy(function(m) { return m.get("type"); });
 
       var groups = _.map(grouped, function(group, type) {
-        var blocks = marginalia.map(function(marginalis, idx) {
+        var blocks = group.map(function(marginalis, idx) {
           return <Marginalis key={idx} marginalia={marginalia} marginalis={marginalis}  />;
         });
         return <div key={type} className="group"><h6 className="subheader">{type}</h6>{blocks}</div>;

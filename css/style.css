@@ -38,13 +38,6 @@ body {
     overflow: auto;
 }
 
-@media
-(-webkit-min-device-pixel-ratio: 2),
-(min-resolution: 192dpi) {
-
-}
-
-
 .minimap {
     -webkit-font-smoothing: none;
     text-rendering: optimizeSpeed;
@@ -253,7 +246,7 @@ canvas {
     display: inline-block;
 }
 
-.loading i {
+.loading img {
     position: relative;
     left: 50%;
     top: 50%;

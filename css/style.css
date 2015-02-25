@@ -46,6 +46,8 @@ body {
 
 
 .minimap {
+    -webkit-font-smoothing: none;
+    text-rendering: optimizeSpeed;
     position: absolute;
     height: 100%;
     margin: 0 0 0 20px;
@@ -204,6 +206,8 @@ canvas {
 }
 
 .textLayer {
+    -webkit-font-smoothing: none;
+    text-rendering: optimizeSpeed;
     position: absolute;
     left: 0;
     top: 0;

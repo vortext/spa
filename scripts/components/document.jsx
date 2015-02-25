@@ -21,9 +21,6 @@ define(function (require) {
   PDFJS.cMapUrl = PDFJSUrl.replace(/\/pdf$/, '') + '/generic/web/cmaps/';
   PDFJS.cMapPacked = true;
 
-  PDFJS.disableWebGL = false;
-
-
   var Document = React.createClass({
     getInitialState: function() {
       return {fingerprint: null,

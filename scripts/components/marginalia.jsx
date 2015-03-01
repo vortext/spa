@@ -60,7 +60,7 @@ define(function (require) {
         return <Annotation annotation={annotation} isActive={isActive} key={idx} />;
       });
 
-      var nAnnotations = <span className="annotations">{annotations.length}</span>;
+      var nAnnotations = annotations.length > 0 ? <span className="annotations">{annotations.length}</span> : null;
       var icon = isActive ? <i className="fa fa-eye-slash"></i> :  <i className="fa fa-eye"></i>;
       var right = <span className="right">{icon}{nAnnotations}</span>;
 

@@ -133,6 +133,14 @@ body {
     background-color: #e5e5e5;
 }
 
+.block h4 .right .annotations {
+    font-size: 8px;
+    opacity: 0.4;
+    position: relative;
+    top: 3px;
+    left: 2px;
+}
+
 .block h4 i {
     line-height: 1.4em;
     opacity: 0.4;

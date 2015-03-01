@@ -154,10 +154,11 @@ define(function (require) {
                                annotations={this.props.annotations}
                                page={this.props.page} />;
       }
+      var loader = require.toUrl(".") + "/../../img/loading-spin.svg";
       return (
         <div className="page">
           <div className="loading" style={{opacity: isLoading ? 1 : 0}}>
-            <i className="fa fa-spinner fa-spin" />
+            <img src={loader} viewBox="0 0 24 24" width="24" height="24" />
           </div>
           <canvas ref="canvas" />
           {textLayer}

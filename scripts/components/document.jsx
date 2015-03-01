@@ -16,13 +16,11 @@ define(function (require) {
   var PDFJS = require("PDFJS");
   var PDFJSUrl = require.toUrl('PDFJS');
 
-  PDFJS.workerSrc = PDFJSUrl + ".worker.js";
-
   PDFJS.cMapUrl = PDFJSUrl.replace(/\/pdf$/, '') + '/generic/web/cmaps/';
   PDFJS.cMapPacked = true;
-
   PDFJS.disableWebGL = false;
 
+  PDFJS.workerSrc = PDFJSUrl + ".worker.js";
 
   var Document = React.createClass({
     getInitialState: function() {

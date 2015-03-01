@@ -60,11 +60,13 @@ define(function (require) {
         return <Annotation annotation={annotation} isActive={isActive} key={idx} />;
       });
 
-      var icon = isActive ? <i className="fa fa-eye-slash right"></i> :  <i className="fa fa-eye right"></i>;
+      var nAnnotations = <span className="annotations">{annotations.length}</span>;
+      var icon = isActive ? <i className="fa fa-eye-slash"></i> :  <i className="fa fa-eye"></i>;
+      var right = <span className="right">{icon}{nAnnotations}</span>;
 
       return (<div className="block">
                <h4>
-                 <a onClick={this.toggleActivate} style={style}>{marginalis.get("title")}{icon}</a>
+                 <a onClick={this.toggleActivate} style={style}>{marginalis.get("title")}{right}</a>
                </h4>
                <div className="content" style={{display: isActive ? "block" : "none"}}>
                  <Editable content={description} callback={this.setDescription} />

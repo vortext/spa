@@ -38,14 +38,10 @@ body {
     overflow: auto;
 }
 
-@media
-(-webkit-min-device-pixel-ratio: 2),
-(min-resolution: 192dpi) {
-
-}
-
-
 .minimap {
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: none;
+    text-rendering: optimizeSpeed;
     position: absolute;
     height: 100%;
     margin: 0 0 0 20px;
@@ -137,6 +133,14 @@ body {
     background-color: #e5e5e5;
 }
 
+.block h4 .right .annotations {
+    font-size: 8px;
+    opacity: 0.4;
+    position: relative;
+    top: 3px;
+    left: 2px;
+}
+
 .block h4 i {
     line-height: 1.4em;
     opacity: 0.4;
@@ -204,6 +208,9 @@ canvas {
 }
 
 .textLayer {
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: none;
+    text-rendering: optimizeSpeed;
     position: absolute;
     left: 0;
     top: 0;
@@ -249,7 +256,7 @@ canvas {
     display: inline-block;
 }
 
-.loading i {
+.loading img {
     position: relative;
     left: 50%;
     top: 50%;

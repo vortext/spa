@@ -76,7 +76,9 @@ define(function (require) {
         var match = TextSearcher.searchExact(text, annotation.content);
 
         if(_.isEmpty(match.matches) && annotation.position) { // Let's try fuzzy search
-          console.log("trying fuzzy match for", annotation);
+          if(text.length < annotation.position) {
+            return match; // the text is smaller than the start position, so stop
+          }
 
           if(annotation.prefix && annotation.suffix) {
             match = TextSearcher.searchFuzzyWithContext(text,

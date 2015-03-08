@@ -72,7 +72,30 @@ define(function (require) {
       var aggregate = this._aggregate;
       var text = aggregate.text;
 
-      var match = TextSearcher.searchExact(text, annotation.content);
+      var findMatch = function(text, annotation) {
+        var match = TextSearcher.searchExact(text, annotation.content);
+
+        if(_.isEmpty(match.matches) && annotation.position) { // Let's try fuzzy search
+          if(text.length < annotation.position) {
+            return match; // the text is smaller than the start position, so stop
+          }
+
+          if(annotation.prefix && annotation.suffix) {
+            match = TextSearcher.searchFuzzyWithContext(text,
+                                                        annotation.prefix,
+                                                        annotation.suffix,
+                                                        annotation.content,
+                                                        annotation.position,
+                                                        annotation.position + annotation.content.length);
+          } else {
+            match = TextSearcher.searchFuzzy(text, annotation.content, annotation.position);
+          }
+        };
+        return match;
+      };
+
+      var match = findMatch(text, annotation);
+
       if(!_.isEmpty(match.matches)) {
         var lower = match.matches[0].start;
         var upper = match.matches[0].end;
@@ -156,7 +179,7 @@ define(function (require) {
       }
       var annotations = marginalia.get("annotations").toJSON();
 
-      var getAnnotationsPerPage = _.memoize(function(annotations) {
+      var getAnnotationsPerPage = function(annotations) {
         var color = marginalia.get("color");
         var mappings = _.flatten(annotations.map(function(annotation) {
           return self.get("pages").annotate(annotation, color);
@@ -165,13 +188,10 @@ define(function (require) {
         var result = {};
         mappings.forEach(function(mapping) {
           result[mapping.pageIndex] = result[mapping.pageIndex] || {};
-          result[mapping.pageIndex][mapping.nodeIndex] =
-            _.union(result[mapping.pageIndex][mapping.nodeIndex] || [], [mapping]);
+          result[mapping.pageIndex][mapping.nodeIndex] = _.union(result[mapping.pageIndex][mapping.nodeIndex] || [], [mapping]);
         });
         return result;
-      }, function(arg) {
-        return JSON.stringify(arg) + self.get("fingerprint");
-      });
+      };
 
       var annotationsPerPage = getAnnotationsPerPage(annotations);
       self.get("pages").map(function(page, pageIndex) {

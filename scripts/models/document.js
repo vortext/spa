@@ -72,29 +72,28 @@ define(function (require) {
       var aggregate = this._aggregate;
       var text = aggregate.text;
 
-      var findMatch = function(text, annotation) {
+      var findMatch = _.memoize(function(text, annotation) {
         var match;
 
-        if(annotation.position) { // Let's try fuzzy search
-          if(text.length < annotation.position) {
-            return match; // the text is smaller than the start position, so stop
+        match = TextSearcher.searchExact(text, annotation.content);
+        if(_.size(match) === 0) {
+          if(annotation.position && annotation.position <= text.length) { // Let's try fuzzy search
+            if(annotation.prefix && annotation.suffix) {
+              match = TextSearcher.searchFuzzyWithContext(text,
+                                                          annotation.prefix,
+                                                          annotation.suffix,
+                                                          annotation.content,
+                                                          annotation.position,
+                                                          annotation.position + annotation.content.length);
+            } else {
+              match = TextSearcher.searchFuzzy(text, annotation.content, annotation.position);
+            }
           }
-
-          if(annotation.prefix && annotation.suffix) {
-            match = TextSearcher.searchFuzzyWithContext(text,
-                                                        annotation.prefix,
-                                                        annotation.suffix,
-                                                        annotation.content,
-                                                        annotation.position,
-                                                        annotation.position + annotation.content.length);
-          } else {
-            match = TextSearcher.searchFuzzy(text, annotation.content, annotation.position);
-          }
-        } else {
-          match = TextSearcher.searchExact(text, annotation.content);
         }
         return match;
-      };
+      }, function(text, annotation) { // hash
+        return text.substr(text.length - 32) + annotation;
+      });
 
       var match = findMatch(text, annotation);
 

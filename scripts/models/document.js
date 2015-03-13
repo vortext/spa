@@ -73,9 +73,9 @@ define(function (require) {
       var text = aggregate.text;
 
       var findMatch = function(text, annotation) {
-        var match = TextSearcher.searchExact(text, annotation.content);
+        var match;
 
-        if(_.isEmpty(match.matches) && annotation.position) { // Let's try fuzzy search
+        if(annotation.position) { // Let's try fuzzy search
           if(text.length < annotation.position) {
             return match; // the text is smaller than the start position, so stop
           }
@@ -90,6 +90,8 @@ define(function (require) {
           } else {
             match = TextSearcher.searchFuzzy(text, annotation.content, annotation.position);
           }
+        } else {
+          match = TextSearcher.searchExact(text, annotation.content);
         }
         return match;
       };

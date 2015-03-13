@@ -50,7 +50,8 @@ define(function (require) {
         });
       } else {
         content = o.textContent;
-      };
+      }
+
       return <div style={o.style} dir={o.dir}>{content}</div>;
     }
   });

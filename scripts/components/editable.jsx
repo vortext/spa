@@ -39,7 +39,7 @@ define(function (require) {
       } else {
         return (
             <div className="editable" onClick={this.edit}>
-              <div dangerouslySetInnerHTML={{__html: Marked(content)}}></div>
+              <div dangerouslySetInnerHTML={{__html: new Marked(content)}}></div>
             </div>);
       }
     }

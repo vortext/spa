@@ -7,7 +7,7 @@ define(function (require) {
   var Backbone = require("backbone");
   var PDFJS = require("PDFJS");
 
-  var TextSearcher = new (require("../vendor/dom-anchor-bitap/text_searcher"));
+  var TextSearcher = new (require("../vendor/dom-anchor-bitap/text_searcher"))();
 
   var RenderingStates = window.RenderingStates = {
     INITIAL: 0,
@@ -68,7 +68,7 @@ define(function (require) {
         });
     },
     annotate: function(annotation, color, uuid) {
-      self = this;
+      var self = this;
       var aggregate = this._aggregate;
       var text = aggregate.text;
 
@@ -90,7 +90,7 @@ define(function (require) {
           } else {
             match = TextSearcher.searchFuzzy(text, annotation.content, annotation.position);
           }
-        };
+        }
         return match;
       };
 

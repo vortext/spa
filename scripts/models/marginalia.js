@@ -90,22 +90,22 @@ define(function (require) {
     }, 2500),
     toggleActive: function(marginalia) {
       var isActive = !!marginalia.get("active");
-      this.each(function(marginalis) { marginalis.set("active", false, {silent: true}); });
-      marginalia.set("active", !isActive, {silent: true});
-      this.trigger("change:active");
+      marginalia.set("active", !isActive);
     },
     getActive: function() {
-      return this.findWhere({active: true});
+      return this.where({active: true});
     },
     addAnnotation: function(content) {
       var marginalia = this.getActive();
-      if(!marginalia) return;
-      var annotations = marginalia.get("annotations");
+      marginalia.forEach(function(marginalis) {
+        console.log("foo", marginalis);
+        var annotations = marginalis.get("annotations");
 
-      annotations.add(new Annotation({
-        content: content,
-        uuid: guid()
-      }));
+        annotations.add(new Annotation({
+          content: content,
+          uuid: guid()
+        }));
+      });
     }
   });
 

@@ -181,13 +181,17 @@ define(function (require) {
         });
         return;
       }
-      var annotations = marginalia.get("annotations").toJSON();
 
-      var getAnnotationsPerPage = function(annotations) {
-        var color = marginalia.get("color");
-        var mappings = _.flatten(annotations.map(function(annotation) {
-          return self.get("pages").annotate(annotation, color);
-        }));
+      var getAnnotationsPerPage = function(marginalia) {
+        var mappings = [];
+        marginalia.forEach(function(marginalis) {
+          var color = marginalis.get("color");
+          var annotations = marginalis.get("annotations").toJSON();
+          var m = _.flatten(annotations.map(function(annotation) {
+            return self.get("pages").annotate(annotation, color);
+          }));
+          mappings.push.apply(mappings, m);
+        });
 
         var result = {};
         mappings.forEach(function(mapping) {
@@ -197,7 +201,7 @@ define(function (require) {
         return result;
       };
 
-      var annotationsPerPage = getAnnotationsPerPage(annotations);
+      var annotationsPerPage = getAnnotationsPerPage(marginalia);
       self.get("pages").map(function(page, pageIndex) {
         page.set({annotations: annotationsPerPage[pageIndex] || []});
       });

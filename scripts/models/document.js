@@ -70,6 +70,9 @@ define(function (require) {
     annotate: function(annotation, color, uuid) {
       var self = this;
       var aggregate = this._aggregate;
+      if (!aggregate) {
+        return [];
+      }
       var text = aggregate.text;
 
       var findMatch = _.memoize(function(text, annotation) {

@@ -12,10 +12,6 @@ define(function (require) {
       prefix: "",
       suffix: ""
     },
-    highlight: function() {
-      var highlighted = !this.get("highlighted");
-      this.set({ highlighted: highlighted });
-    },
     select: function() {
       this.trigger("select", this.get("uuid"));
     }

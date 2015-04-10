@@ -10,7 +10,10 @@ define(function (require) {
       label: "",
       content: "",
       prefix: "",
-      suffix: ""
+      suffix: "",
+      sessionStart: null,
+      elapsedTime: null,
+      createdAt: null
     },
     select: function() {
       this.trigger("select", this.get("uuid"));

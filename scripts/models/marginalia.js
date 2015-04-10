@@ -7,6 +7,8 @@ define(function (require) {
   var Backbone = require("backbone");
   var Annotation = require('./annotation');
 
+  var startTime = new Date(); // TODO use something like Mixpanel for this
+
   var colors=[
     [168,191,18],
     [0,170,181],
@@ -98,12 +100,14 @@ define(function (require) {
     addAnnotation: function(content) {
       var marginalia = this.getActive();
       marginalia.forEach(function(marginalis) {
-        console.log("foo", marginalis);
         var annotations = marginalis.get("annotations");
 
         annotations.add(new Annotation({
           content: content,
-          uuid: guid()
+          uuid: guid(),
+          sessionStart: startTime,
+          createdAt: new Date(),
+          elapsedTime: Math.abs(startTime - new Date())
         }));
       });
     }

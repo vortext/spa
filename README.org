@@ -15,15 +15,16 @@ From the Old Norse word spá or spæ referring to prophesying and which is cogna
 Spá is our client-side library for rendering and editing annotations on PDF documents.
 It was initially conceived to render predictions of machine learning systems trained on full-text literature from the biomedical domain.
 
-The original design was published as "Spá: A Web-Based Viewer for Text Mining in Evidence Based Medicine." In the Proceedings of the European Conference on Machine Learning and Principles and Practice of Knowledge (ECML-PKDD 2014)
+The original design was published as "Spá: A Web-Based Viewer for Text Mining in Evidence Based Medicine" in the Proceedings of the European Conference on Machine Learning and Principles and Practice of Knowledge (ECML-PKDD 2014)
 [[[http://dx.doi.org/10.1007/978-3-662-44845-8_33][doi]], [[https://files.joelkuiper.eu/f/preprint/spa.pdf][preprint]]].
 
-Later Spá was changed to work as a [[http://csurs.csr.uky.edu/cgi-bin/man/man2html?1+git-submodule][git submodule]] for the [[https://github.com/vortext/vortext][Vortext]] and [[https://github.com/vortext/vortext-demo][Vortext Demo]] projects.
+Later Spá was changed to work as a [[http://csurs.csr.uky.edu/cgi-bin/man/man2html?1+git-submodule][git submodule]] for the [[https://github.com/vortext/vortext][Vortext Annotate]] and [[https://github.com/vortext/vortext-demo][Vortext Demo]] projects.
 * How does it work?
 The major components of Spá are:
   - [[https://github.com/mozilla/pdf.js][Mozilla PDF.js]] (referenced as a submodule)
   - [[https://facebook.github.io/react/][React]]
   - [[http://backbonejs.org/][Backbone.js]]
+  - [[http://requirejs.org/][RequireJS]]
   - [[dom-anchor-bitap (experimental)][Hypothesis dom-anchor-bitap]] (experimental)
 
 PDF.js is responsible for rendering the document.

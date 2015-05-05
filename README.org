@@ -1,8 +1,17 @@
 #+BEGIN_QUOTE
 From the Old Norse word spá or spæ referring to prophesying and which is cognate with the present English word "spy," continuing Proto-Germanic *spah- and the Proto-Indo-European root *(s)peḱ (to see, to observe) --- [[http://en.wikipedia.org/wiki/V%C3%B6lva][vǫlva (wikipedia)]]
 #+END_QUOTE
+* Basic idea
+  Unstructured PDF documents remain the main vehicle for dissemination of scientific findings.
+  Those interested in gathering and assimilating data must therefore manually peruse published articles and extract from these the elements of interest.
+  Evidence-based medicine provides a compelling illustration of this: many person-hours are spent each year extracting summary information from articles that describe clinical trials.
+  Machine learning provides a potential means of mitigating this burden by automating extraction.
 
-* What is Spá
+  But, for automated approaches to be useful to end-users, we need tools that allow domain experts to interact with, and benefit from, model predictions.
+  To this end, we present an web-based tool called Spá that accepts as input an article and provides as output an automatically visually annotated rendering of this article.
+  More generally, Spá provides a framework for visualizing predictions, both at the document and sentence level, for full-text PDFs.
+
+* What is Spá concretely
 Spá is our client-side library for rendering and editing annotations on PDF documents.
 It was initially conceived to render predictions of machine learning systems trained on full-text literature from the biomedical domain.
 
@@ -41,4 +50,4 @@ Currently the following projects use Spá:
   Comments and suggestions are much appreciated.
   For code contributions: fork, branch, and send a pull request.
 * License
-  Spa is open source, and licensed under [[http://gplv3.fsf.org/][GPLv3]]. See [[https://github.com/joelkuiper/spa/blob/master/LICENSE.md][LICENSE.md]] for more information.
+  Spa is open source, and licensed under [[http://gplv3.fsf.org/][GPLv3]]. See [[https://github.com/vortext/spa/blob/master/LICENSE][license]] for more information.

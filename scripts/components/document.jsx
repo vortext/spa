@@ -24,29 +24,28 @@ define(function (require) {
 
   var Document = React.createClass({
     getInitialState: function() {
-      return {fingerprint: null,
-              $viewer: null};
-    },
-    componentWillUpdate: function(nextProps, nextState) {
-      var $viewer = this.state.$viewer;
-      if($viewer) {
-        if(nextState.select !== this.state.select) {
-          var delta = $viewer.find("[data-uuid*="+ nextState.select + "]").offset().top;
-          var viewerHeight = $viewer.height();
-          var center = viewerHeight / 2;
-          $viewer.animate({scrollTop: $viewer.scrollTop() + delta - center});
-        }
-      }
+      return { fingerprint: null, $viewer: null };
     },
     toggleHighlights: function(e, uuid) {
       var $annotations = this.state.$viewer.find("[data-uuid*="+uuid+"]");
       $annotations.toggleClass("highlight");
     },
+    scrollTo: function(uuid) {
+      var $viewer = this.state.$viewer;
+      if($viewer) {
+        var delta = $viewer.find("[data-uuid*="+ uuid + "]").offset().top;
+        var viewerHeight = $viewer.height();
+        var center = viewerHeight / 2;
+        $viewer.animate({scrollTop: $viewer.scrollTop() + delta - center});
+      }
+    },
     componentWillUnmount: function() {
       $(window).off("highlight", this.toggleHighlights);
+      this.props.marginalia.off("annotations:select", this.scrollTo);
     },
     componentDidMount: function() {
       $(window).on("highlight", this.toggleHighlights);
+      this.props.marginalia.on("annotations:select", this.scrollTo);
 
       var $viewer = $(this.refs.viewer.getDOMNode());
       this.setState({$viewer: $viewer});

@@ -10,11 +10,10 @@ define(function (require) {
       label: "",
       content: "",
       prefix: "",
-      suffix: ""
-    },
-    highlight: function() {
-      var highlighted = !this.get("highlighted");
-      this.set({ highlighted: highlighted });
+      suffix: "",
+      sessionStart: null,
+      elapsedTime: null,
+      createdAt: null
     },
     select: function() {
       this.trigger("select", this.get("uuid"));

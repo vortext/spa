@@ -8,6 +8,7 @@ define(function (require) {
   var React = require("react");
 
   var Editable = require("jsx!./editable");
+  var Marked = require("marked");
 
   var Annotation = React.createClass({
     highlight: function(uuid) {
@@ -23,18 +24,14 @@ define(function (require) {
       var annotation = this.props.annotation;
       var text = annotation.get("content");
 
-      var isActive = this.props.isActive;
-      var content;
-      if(isActive) {
-        content = (<a className="wrap" onClick={this.select}>{text}</a>);
-      } else {
-        content = (<span className="wrap">{text}</span>);
-      }
+      var isEditable = this.props.isEditable;
+
+      var content = <a className="wrap" onClick={this.select}>{text}</a>;
 
       var remove = <i className="fa fa-remove remove" />;
 
       return (<li onMouseEnter={this.highlight} onMouseLeave={this.highlight}>
-               {content} {isActive ? <a onClick={this.destroy}>{remove}</a> : null}
+               {content} {isEditable ? <a onClick={this.destroy}>{remove}</a> : null}
              </li>);
     }
   });
@@ -56,20 +53,31 @@ define(function (require) {
         "color": isActive ? "white" : "inherit"
       };
 
+
+      var isEditable = this.props.editable;
+
       var annotations = marginalis.get("annotations").map(function(annotation, idx) {
-        return <Annotation annotation={annotation} isActive={isActive} key={idx} />;
+        return <Annotation annotation={annotation} isActive={isActive} isEditable={isEditable} key={idx} />;
       });
 
       var nAnnotations = <span className="annotations">{annotations.length}</span>;
       var icon = isActive ? <i className="fa fa-eye-slash"></i> :  <i className="fa fa-eye"></i>;
       var right = <span className="right">{icon}{nAnnotations}</span>;
 
+
+      var content;
+      if(isEditable) {
+        content = <Editable content={description} callback={this.setDescription} />;
+      } else {
+        content = <div dangerouslySetInnerHTML={{__html: Marked(description)}}></div>;
+      }
+
       return (<div className="block">
                <h4>
                  <a onClick={this.toggleActivate} style={style}>{marginalis.get("title")}{right}</a>
                </h4>
                <div className="content" style={{display: isActive ? "block" : "none"}}>
-                 <Editable content={description} callback={this.setDescription} />
+                 {content}
                  <ul className="no-bullet annotations">{annotations}</ul>
                </div>
               </div>);

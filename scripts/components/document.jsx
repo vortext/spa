@@ -70,7 +70,7 @@ define(function (require) {
           <Minimap $viewer={this.state.$viewer} pdf={pdf} annotations={annotations} />
           <div className="viewer-container">
             <div className="viewer" ref="viewer">
-               <Annotate marginalia={marginalia} />
+               {this.props.isEditable ? <Annotate marginalia={marginalia} /> : null}
                {pagesElements}
              </div>
            </div>

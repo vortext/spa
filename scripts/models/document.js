@@ -76,18 +76,17 @@ define(function (require) {
       var text = aggregate.text;
 
       var findMatch = _.memoize(function(text, annotation) {
-        var match;
-
-        match = TextSearcher.searchExact(text, annotation.content);
+        var match = TextSearcher.searchExact(text, annotation.content);
         if(_.size(match) === 0) {
           if(annotation.position && annotation.position <= text.length) { // Let's try fuzzy search
             if(annotation.prefix && annotation.suffix) {
-              match = TextSearcher.searchFuzzyWithContext(text,
-                                                          annotation.prefix,
-                                                          annotation.suffix,
-                                                          annotation.content,
-                                                          annotation.position,
-                                                          annotation.position + annotation.content.length);
+              match = TextSearcher.searchFuzzyWithContext(
+                text,
+                annotation.prefix,
+                annotation.suffix,
+                annotation.content,
+                annotation.position,
+                annotation.position + annotation.content.length);
             } else {
               match = TextSearcher.searchFuzzy(text, annotation.content, annotation.position);
             }
@@ -155,12 +154,14 @@ define(function (require) {
           process(_.rest(arr));
         });
       };
+
       process(pageQueue);
     }
   });
 
   var Document = Backbone.Model.extend({
     defaults: {
+      text: "",
       fingerprint: null,
       binary: null,
       raw: null
@@ -206,11 +207,14 @@ define(function (require) {
         page.set({annotations: annotationsPerPage[pageIndex] || []});
       });
     },
+    getText: function() {
+      return this.get("pages")._aggregate.text;
+    },
     loadFromUrl: function(url) {
       var self = this;
       PDFJS.getDocument(url).then(function(pdf) {
         self.set({binary: null, raw: pdf, fingerprint: pdf.pdfInfo.fingerprint});
-        self.get("pages").populate(pdf);
+        var text = self.get("pages").populate(pdf);
       });
     },
     loadFromData: function(data) {
@@ -218,7 +222,7 @@ define(function (require) {
       this.set({binary: data});
       PDFJS.getDocument(data).then(function(pdf) {
         self.set({raw: pdf, fingerprint: pdf.pdfInfo.fingerprint});
-        self.get("pages").populate(pdf);
+        var text = self.get("pages").populate(pdf);
       });
     }
   });

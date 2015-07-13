@@ -85,7 +85,15 @@ define(function (require) {
   });
 
   var Marginalia = React.createClass({
+    getInitialState: function() {
+      return { loading: false };
+    },
     render: function() {
+      if (this.state.loading) {
+        var loader = require.toUrl(".") + "/../../img/loading-spin.svg";
+        return <div className="loading"><img src={loader} viewBox="0 0 24 24" width="24" height="24" /></div>;
+      }
+
       var marginalia = this.props.marginalia;
       var grouped = marginalia.groupBy(function(m) { return m.get("type"); });
 

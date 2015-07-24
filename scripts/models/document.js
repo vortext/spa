@@ -214,7 +214,7 @@ define(function (require) {
       var self = this;
       PDFJS.getDocument(url).then(function(pdf) {
         self.set({binary: null, raw: pdf, fingerprint: pdf.pdfInfo.fingerprint});
-        var text = self.get("pages").populate(pdf);
+        self.get("pages").populate(pdf);
       });
     },
     loadFromData: function(data) {
@@ -222,7 +222,7 @@ define(function (require) {
       this.set({binary: data});
       PDFJS.getDocument(data).then(function(pdf) {
         self.set({raw: pdf, fingerprint: pdf.pdfInfo.fingerprint});
-        var text = self.get("pages").populate(pdf);
+        self.get("pages").populate(pdf);
       });
     }
   });

@@ -25,7 +25,6 @@ define(function (require) {
       var text = annotation.get("content");
 
       var isEditable = this.props.isEditable;
-
       var content = <a className="wrap" onClick={this.select}>{text}</a>;
 
       var remove = <i className="fa fa-remove remove" />;
@@ -46,6 +45,8 @@ define(function (require) {
     },
     render: function() {
       var marginalis = this.props.marginalis;
+      var isEditable = this.props.isEditable;
+
       var description = marginalis.get("description");
       var isActive = marginalis.get("active");
       var style = {
@@ -54,7 +55,6 @@ define(function (require) {
       };
 
 
-      var isEditable = this.props.editable;
 
       var annotations = marginalis.get("annotations").map(function(annotation, idx) {
         return <Annotation annotation={annotation} isActive={isActive} isEditable={isEditable} key={idx} />;
@@ -94,12 +94,13 @@ define(function (require) {
         return <div className="loading"><img src={loader} viewBox="0 0 24 24" width="24" height="24" /></div>;
       }
 
+      var isEditable = this.props.isEditable;
       var marginalia = this.props.marginalia;
       var grouped = marginalia.groupBy(function(m) { return m.get("type"); });
 
       var groups = _.map(grouped, function(group, type) {
         var blocks = group.map(function(marginalis, idx) {
-          return <Marginalis key={idx} marginalia={marginalia} marginalis={marginalis}  />;
+          return <Marginalis key={idx} marginalia={marginalia} marginalis={marginalis} isEditable={isEditable} />;
         });
         return <div key={type} className="group"><h6 className="subheader">{type}</h6>{blocks}</div>;
       });

@@ -22,8 +22,8 @@ if (typeof PDFJS === 'undefined') {
   (typeof window !== 'undefined' ? window : this).PDFJS = {};
 }
 
-PDFJS.version = '1.1.373';
-PDFJS.build = '7331f83';
+PDFJS.version = '1.1.380';
+PDFJS.build = '8274c18';
 
 (function pdfjsWrapper() {
   // Use strict in our context only - users might not want it
@@ -9221,10 +9221,12 @@ var Page = (function PageClosure() {
     get annotations() {
       var annotations = [];
       var annotationRefs = this.getInheritedPageProp('Annots') || [];
+      var annotationFactory = new AnnotationFactory();
       for (var i = 0, n = annotationRefs.length; i < n; ++i) {
         var annotationRef = annotationRefs[i];
-        var annotation = Annotation.fromRef(this.xref, annotationRef);
-        if (annotation) {
+        var annotation = annotationFactory.create(this.xref, annotationRef);
+        if (annotation &&
+            (annotation.isViewable() || annotation.isPrintable())) {
           annotations.push(annotation);
         }
       }
@@ -10012,6 +10014,19 @@ var Catalog = (function CatalogClosure() {
       var obj = this.catDict.get('Names');
 
       var javaScript = [];
+      function appendIfJavaScriptDict(jsDict) {
+        var type = jsDict.get('S');
+        if (!isName(type) || type.name !== 'JavaScript') {
+          return;
+        }
+        var js = jsDict.get('JS');
+        if (isStream(js)) {
+          js = bytesToString(js.getBytes());
+        } else if (!isString(js)) {
+          return;
+        }
+        javaScript.push(stringToPDFString(js));
+      }
       if (obj && obj.has('JavaScript')) {
         var nameTree = new NameTree(obj.getRaw('JavaScript'), xref);
         var names = nameTree.getAll();
@@ -10022,36 +10037,25 @@ var Catalog = (function CatalogClosure() {
           // We don't really use the JavaScript right now. This code is
           // defensive so we don't cause errors on document load.
           var jsDict = names[name];
-          if (!isDict(jsDict)) {
-            continue;
+          if (isDict(jsDict)) {
+            appendIfJavaScriptDict(jsDict);
           }
-          var type = jsDict.get('S');
-          if (!isName(type) || type.name !== 'JavaScript') {
-            continue;
-          }
-          var js = jsDict.get('JS');
-          if (!isString(js) && !isStream(js)) {
-            continue;
-          }
-          if (isStream(js)) {
-            js = bytesToString(js.getBytes());
-          }
-          javaScript.push(stringToPDFString(js));
         }
       }
 
       // Append OpenAction actions to javaScript array
       var openactionDict = this.catDict.get('OpenAction');
-      if (isDict(openactionDict)) {
-        var objType = openactionDict.get('Type');
+      if (isDict(openactionDict, 'Action')) {
         var actionType = openactionDict.get('S');
-        var action = openactionDict.get('N');
-        var isPrintAction = (isName(objType) && objType.name === 'Action' &&
-                            isName(actionType) && actionType.name === 'Named' &&
-                            isName(action) && action.name === 'Print');
-
-        if (isPrintAction) {
-          javaScript.push('print(true);');
+        if (isName(actionType) && actionType.name === 'Named') {
+          // The named Print action is not a part of the PDF 1.7 specification,
+          // but is supported by many PDF readers/writers (including Adobe's).
+          var action = openactionDict.get('N');
+          if (isName(action) && action.name === 'Print') {
+            javaScript.push('print({});');
+          }
+        } else {
+          appendIfJavaScriptDict(openactionDict);
         }
       }
 
@@ -11301,7 +11305,54 @@ var ExpertSubsetCharset = [
 
 
 var DEFAULT_ICON_SIZE = 22; // px
-var SUPPORTED_TYPES = ['Link', 'Text', 'Widget'];
+
+/**
+ * @constructor
+ */
+function AnnotationFactory() {}
+AnnotationFactory.prototype = {
+  /**
+   * @param {XRef} xref
+   * @param {Object} ref
+   * @returns {Annotation}
+   */
+  create: function AnnotationFactory_create(xref, ref) {
+    var dict = xref.fetchIfRef(ref);
+    if (!isDict(dict)) {
+      return;
+    }
+
+    // Determine the annotation's subtype.
+    var subtype = dict.get('Subtype');
+    subtype = isName(subtype) ? subtype.name : '';
+
+    // Return the right annotation object based on the subtype and field type.
+    var parameters = {
+      dict: dict,
+      ref: ref
+    };
+
+    switch (subtype) {
+      case 'Link':
+        return new LinkAnnotation(parameters);
+
+      case 'Text':
+        return new TextAnnotation(parameters);
+
+      case 'Widget':
+        var fieldType = Util.getInheritableProperty(dict, 'FT');
+        if (isName(fieldType) && fieldType.name === 'Tx') {
+          return new TextWidgetAnnotation(parameters);
+        }
+        return new WidgetAnnotation(parameters);
+
+      default:
+        warn('Unimplemented annotation type "' + subtype + '", ' +
+             'falling back to base annotation');
+        return new Annotation(parameters);
+    }
+  }
+};
 
 var Annotation = (function AnnotationClosure() {
   // 12.5.5: Algorithm: Appearance streams
@@ -11472,13 +11523,9 @@ var Annotation = (function AnnotationClosure() {
 
     isInvisible: function Annotation_isInvisible() {
       var data = this.data;
-      if (data && SUPPORTED_TYPES.indexOf(data.subtype) !== -1) {
-        return false;
-      } else {
-        return !!(data &&
-                  data.annotationFlags &&            // Default: not invisible
-                  data.annotationFlags & 0x1);       // Invisible
-      }
+      return !!(data &&
+                data.annotationFlags &&            // Default: not invisible
+                data.annotationFlags & 0x1);       // Invisible
     },
 
     isViewable: function Annotation_isViewable() {
@@ -11551,70 +11598,6 @@ var Annotation = (function AnnotationClosure() {
               return opList;
             });
         });
-    }
-  };
-
-  Annotation.getConstructor =
-      function Annotation_getConstructor(subtype, fieldType) {
-
-    if (!subtype) {
-      return;
-    }
-
-    // TODO(mack): Implement FreeText annotations
-    if (subtype === 'Link') {
-      return LinkAnnotation;
-    } else if (subtype === 'Text') {
-      return TextAnnotation;
-    } else if (subtype === 'Widget') {
-      if (!fieldType) {
-        return;
-      }
-
-      if (fieldType === 'Tx') {
-        return TextWidgetAnnotation;
-      } else {
-        return WidgetAnnotation;
-      }
-    } else {
-      return Annotation;
-    }
-  };
-
-  Annotation.fromRef = function Annotation_fromRef(xref, ref) {
-
-    var dict = xref.fetchIfRef(ref);
-    if (!isDict(dict)) {
-      return;
-    }
-
-    var subtype = dict.get('Subtype');
-    subtype = isName(subtype) ? subtype.name : '';
-    if (!subtype) {
-      return;
-    }
-
-    var fieldType = Util.getInheritableProperty(dict, 'FT');
-    fieldType = isName(fieldType) ? fieldType.name : '';
-
-    var Constructor = Annotation.getConstructor(subtype, fieldType);
-    if (!Constructor) {
-      return;
-    }
-
-    var params = {
-      dict: dict,
-      ref: ref,
-    };
-
-    var annotation = new Constructor(params);
-
-    if (annotation.isViewable() || annotation.isPrintable()) {
-      return annotation;
-    } else {
-      if (SUPPORTED_TYPES.indexOf(subtype) === -1) {
-        warn('unimplemented annotation type: ' + subtype);
-      }
     }
   };
 

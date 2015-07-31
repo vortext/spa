@@ -25,15 +25,30 @@ define(function (require) {
         angle += Math.PI / 2;
       }
       var fontHeight = Math.sqrt((tx[2] * tx[2]) + (tx[3] * tx[3]));
-      var fontAscent = (style.ascent ? style.ascent * fontHeight :
-                        (style.descent ? (1 + style.descent) * fontHeight : fontHeight));
+      var fontAscent = fontHeight;
+      if (style.ascent) {
+        fontAscent = style.ascent * fontAscent;
+      } else if (style.descent) {
+        fontAscent = (1 + style.descent) * fontAscent;
+      }
+
+      var left;
+      var top;
+      if (angle === 0) {
+        left = tx[4];
+        top = tx[5] - fontAscent;
+      } else {
+        left = tx[4] + (fontAscent * Math.sin(angle));
+        top = tx[5] - (fontAscent * Math.cos(angle));
+      }
+
 
       return {
         _angle: angle,
         fontSize: fontHeight + "px",
         fontFamily: style.fontFamily,
-        left: (tx[4] + (fontAscent * Math.sin(angle))) + 'px',
-        top: (tx[5] - (fontAscent * Math.cos(angle))) + 'px'
+        left: left + 'px',
+        top: top + 'px'
       };
     };
 
@@ -41,7 +56,8 @@ define(function (require) {
       var style = this.calculateStyles(geom, styles[geom.fontName]);
       ctx.font = style.fontSize + ' ' + style.fontFamily;
 
-      if(this.isWhitespace(geom, style)) {
+      var width = calculateWidth(ctx, geom);
+      if(this.isWhitespace(geom, style) || width <= 0) {
         return {isWhitespace : true};
       }
 
@@ -58,9 +74,9 @@ define(function (require) {
         textElement.canvasWidth = geom.width * viewport.scale;
       }
 
-      var textScale = textElement.canvasWidth / calculateWidth(ctx, geom);
+      var textScale = textElement.canvasWidth / width;
       var rotation = textElement.angle;
-      var transform = 'scale(' + textScale + ', 1)';
+      var transform = 'scaleX(' + textScale + ')';
       transform = 'rotate(' + rotation + 'deg) ' + transform;
 
       CustomStyle.setProp('transform', textElement, transform);

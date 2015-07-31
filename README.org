@@ -21,7 +21,7 @@ The original design was published as "Spá: A Web-Based Viewer for Text Mining i
 Later Spá was changed to work as a [[http://csurs.csr.uky.edu/cgi-bin/man/man2html?1+git-submodule][git submodule]] for the [[https://github.com/vortext/vortext][Vortext Annotate]] and [[https://github.com/vortext/vortext-demo][Vortext Demo]] projects.
 * How does it work?
 The major components of Spá are:
-  - [[https://github.com/mozilla/pdf.js][Mozilla PDF.js]] (referenced as a submodule)
+  - [[https://github.com/mozilla/pdf.js][Mozilla PDF.js]]
   - [[https://facebook.github.io/react/][React]]
   - [[http://backbonejs.org/][Backbone.js]]
   - [[http://requirejs.org/][RequireJS]]

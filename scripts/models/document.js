@@ -67,7 +67,7 @@ define(function (require) {
           return content;
         });
     },
-    annotate: function(annotation, color, uuid) {
+    annotate: function(annotation, color) {
       var self = this;
       var aggregate = this._aggregate;
       if (!aggregate) {
@@ -75,33 +75,53 @@ define(function (require) {
       }
       var text = aggregate.text;
 
-      var findMatch = _.memoize(function(text, annotation) {
-        var match = TextSearcher.searchExact(text, annotation.content);
-        if(_.size(match) === 0) {
-          if(annotation.position && annotation.position <= text.length) { // Let's try fuzzy search
-            if(annotation.prefix && annotation.suffix) {
-              match = TextSearcher.searchFuzzyWithContext(
-                text,
-                annotation.prefix,
-                annotation.suffix,
-                annotation.content,
-                annotation.position,
-                annotation.position + annotation.content.length);
-            } else {
-              match = TextSearcher.searchFuzzy(text, annotation.content, annotation.position);
-            }
+      var findMatch = function(text, annotation) {
+        var content = annotation.get("content");
+        var prefix = annotation.get("prefix");
+        var suffix = annotation.get("suffix");
+        var len = text.length;
+        // If no position is given, start in the middle of the document
+        var position = annotation.get("position") || Math.floor(len / 2);
+
+
+        var result = TextSearcher.searchExact(text, content);
+        if(!result.matches.length) {
+          if(prefix && suffix) {
+            console.log("trying fuzzy search with context for", content);
+            result = TextSearcher.searchFuzzyWithContext(
+              text,
+              prefix,
+              suffix,
+              content,
+              position,
+              position + content.length,
+              false, {
+                matchDistance: len * 2,
+                contextMatchThreshold: 0.5,
+                patternMatchThreshold: 0.5,
+                flexContext: true
+              });
+          } else {
+            console.log("trying fuzzy search without context for", content);
+            result = TextSearcher.searchFuzzy(
+              text,
+              content,
+              position,
+              false, {
+                matchDistance: len * 2,
+                withFuzzyComparison: true
+              });
           }
         }
-        return match;
-      }, function(text, annotation) { // hash
-        return text.substr(text.length - 32) + annotation;
-      });
+        return result.matches[0];
+      };
 
       var match = findMatch(text, annotation);
-
-      if(!_.isEmpty(match.matches)) {
-        var lower = match.matches[0].start;
-        var upper = match.matches[0].end;
+      if(!match) {
+        console.log("no match for", annotation.get("content"));
+      } else {
+        var lower = match.start;
+        var upper = match.end;
         var mapping = [];
         var nodes = aggregate.nodes;
         var pages = aggregate.pages;
@@ -123,7 +143,7 @@ define(function (require) {
 
         return mapping.map(function(m) {
           m.color = color;
-          m.uuid = annotation.uuid;
+          m.uuid = annotation.get("uuid");
           return m;
         });
       }
@@ -174,8 +194,11 @@ define(function (require) {
         self.trigger("pages:" + e, obj);
       });
     },
+    _cache: {},
     annotate: function(marginalia) {
       var self = this; // *sigh*
+      var _cache = this._cache;
+
       if(!marginalia) {
         self.get("pages").map(function(page, pageIndex) {
           page.set({annotations: []});
@@ -185,12 +208,22 @@ define(function (require) {
 
       var getAnnotationsPerPage = function(marginalia) {
         var mappings = [];
+
         marginalia.forEach(function(marginalis) {
           var color = marginalis.get("color");
-          var annotations = marginalis.get("annotations").toJSON();
+          var annotations = marginalis.get("annotations");
+
           var m = _.flatten(annotations.map(function(annotation) {
-            return self.get("pages").annotate(annotation, color);
+            var cid = annotation.cid;
+            if(_.size(_cache[cid])) {
+              return _cache[cid];
+            } else {
+              var a = self.get("pages").annotate(annotation, color);
+              _cache[cid] = a;
+              return a;
+            }
           }));
+
           mappings.push.apply(mappings, m);
         });
 

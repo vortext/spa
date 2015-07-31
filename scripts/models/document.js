@@ -116,7 +116,7 @@ define(function (require) {
 
       var match = findMatch(text, annotation, useFuzzy);
       if(!match) {
-        console.debug("no match for", annotation.get("content"));
+        return [];
       } else {
         var lower = match.start;
         var upper = match.end;
@@ -145,7 +145,6 @@ define(function (require) {
           return m;
         });
       }
-      return [];
     },
     populate: function(pdf) {
       var self  = this;
@@ -182,9 +181,10 @@ define(function (require) {
       text: "",
       fingerprint: null,
       state: RenderingStates.INITIAL,
-      raw: null
+      raw: null,
+      binary: null,
+      _cache: {}
     },
-    _cache: {},
     initialize: function() {
       var self = this;
       var pages = new Pages();
@@ -199,7 +199,7 @@ define(function (require) {
     },
     annotate: function(marginalia) {
       var self = this; // *sigh*
-      var _cache = this._cache;
+      var _cache = this.get("_cache");
 
       if(!marginalia) {
         self.get("pages").map(function(page, pageIndex) {
@@ -223,6 +223,7 @@ define(function (require) {
               var isFinished = self.get("state") === RenderingStates.FINISHED;
               var a = self.get("pages").annotate(annotation, color, isFinished);
               _cache[cid] = a;
+              self.set("_cache", a);
               return a;
             }
           }));
@@ -255,8 +256,9 @@ define(function (require) {
     },
     loadFromData: function(data) {
       var self = this;
+      self.set({binary: data, _cache: {}});
       PDFJS.getDocument(data).then(function(pdf) {
-        self.set({raw: pdf, fingerprint: pdf.pdfInfo.fingerprint});
+        self.set({fingerprint: pdf.pdfInfo.fingerprint, raw: data});
         self.get("pages").populate(pdf);
       });
     }

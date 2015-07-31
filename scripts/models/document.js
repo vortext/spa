@@ -67,7 +67,7 @@ define(function (require) {
           return content;
         });
     },
-    annotate: function(annotation, color) {
+    annotate: function(annotation, color, useFuzzy) {
       var self = this;
       var aggregate = this._aggregate;
       if (!aggregate) {
@@ -75,7 +75,7 @@ define(function (require) {
       }
       var text = aggregate.text;
 
-      var findMatch = function(text, annotation) {
+      var findMatch = function(text, annotation, useFuzzy) {
         var content = annotation.get("content");
         var prefix = annotation.get("prefix");
         var suffix = annotation.get("suffix");
@@ -85,7 +85,7 @@ define(function (require) {
 
 
         var result = TextSearcher.searchExact(text, content);
-        if(!result.matches.length) {
+        if(!result.matches.length && useFuzzy) {
           if(prefix && suffix) {
             result = TextSearcher.searchFuzzyWithContext(
               text,
@@ -114,7 +114,7 @@ define(function (require) {
         return result.matches[0];
       };
 
-      var match = findMatch(text, annotation);
+      var match = findMatch(text, annotation, useFuzzy);
       if(!match) {
         console.debug("no match for", annotation.get("content"));
       } else {
@@ -181,6 +181,7 @@ define(function (require) {
     defaults: {
       text: "",
       fingerprint: null,
+      state: RenderingStates.INITIAL,
       raw: null
     },
     _cache: {},
@@ -191,6 +192,9 @@ define(function (require) {
       this.set("pages", pages);
       pages.on("all", function(e, obj) {
         self.trigger("pages:" + e, obj);
+      });
+      pages.on("ready", function(e, obj) {
+        self.set("state", RenderingStates.FINISHED);
       });
     },
     annotate: function(marginalia) {
@@ -216,7 +220,8 @@ define(function (require) {
             if(_.size(_cache[cid])) {
               return _cache[cid];
             } else {
-              var a = self.get("pages").annotate(annotation, color);
+              var isFinished = self.get("state") === RenderingStates.FINISHED;
+              var a = self.get("pages").annotate(annotation, color, isFinished);
               _cache[cid] = a;
               return a;
             }

@@ -56,9 +56,13 @@ define(function (require) {
       var style = this.calculateStyles(geom, styles[geom.fontName]);
       ctx.font = style.fontSize + ' ' + style.fontFamily;
 
-      var width = calculateWidth(ctx, geom);
-      if(this.isWhitespace(geom, style) || width <= 0) {
+      if(this.isWhitespace(geom, style)) {
         return {isWhitespace : true};
+      }
+
+      var width = calculateWidth(ctx, geom);
+      if(width == 0) {
+        return;
       }
 
       var textElement = {

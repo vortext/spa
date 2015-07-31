@@ -18,6 +18,7 @@ define(function (require) {
 
   PDFJS.cMapUrl = PDFJSUrl.replace(/\/pdf$/, '') + '/cmaps/';
   PDFJS.cMapPacked = true;
+  PDFJS.disableWebGL = false;
 
   PDFJS.workerSrc = PDFJSUrl + ".worker.js";
 

@@ -249,8 +249,11 @@ define(function (require) {
     },
     loadFromUrl: function(url) {
       var self = this;
+      self.set({binary: null, _cache: {}});
       PDFJS.getDocument(url).then(function(pdf) {
-        self.set({binary: null, raw: pdf, fingerprint: pdf.pdfInfo.fingerprint});
+        self.set({raw: pdf,
+                  fingerprint: pdf.pdfInfo.fingerprint,
+                  state: RenderingStates.INITIAL});
         self.get("pages").populate(pdf);
       });
     },
@@ -258,7 +261,9 @@ define(function (require) {
       var self = this;
       self.set({binary: data, _cache: {}});
       PDFJS.getDocument(data).then(function(pdf) {
-        self.set({fingerprint: pdf.pdfInfo.fingerprint, raw: data});
+        self.set({fingerprint: pdf.pdfInfo.fingerprint,
+                  raw: data,
+                  state: RenderingStates.INITIAL});
         self.get("pages").populate(pdf);
       });
     }

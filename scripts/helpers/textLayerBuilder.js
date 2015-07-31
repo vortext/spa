@@ -46,7 +46,7 @@ define(function (require) {
       }
 
       var textElement = {
-        fontNam:  geom.fontName,
+        fontName:  geom.fontName,
         angle:  style._angle * (180 / Math.PI),
         style: style,
         textContent: geom.str

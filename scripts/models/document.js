@@ -87,7 +87,6 @@ define(function (require) {
         var result = TextSearcher.searchExact(text, content);
         if(!result.matches.length) {
           if(prefix && suffix) {
-            console.log("trying fuzzy search with context for", content);
             result = TextSearcher.searchFuzzyWithContext(
               text,
               prefix,
@@ -102,7 +101,6 @@ define(function (require) {
                 flexContext: true
               });
           } else {
-            console.log("trying fuzzy search without context for", content);
             result = TextSearcher.searchFuzzy(
               text,
               content,
@@ -118,7 +116,7 @@ define(function (require) {
 
       var match = findMatch(text, annotation);
       if(!match) {
-        console.log("no match for", annotation.get("content"));
+        console.debug("no match for", annotation.get("content"));
       } else {
         var lower = match.start;
         var upper = match.end;
@@ -183,18 +181,18 @@ define(function (require) {
     defaults: {
       text: "",
       fingerprint: null,
-      binary: null,
       raw: null
     },
+    _cache: {},
     initialize: function() {
       var self = this;
       var pages = new Pages();
+      this._cache = {}; // clear
       this.set("pages", pages);
       pages.on("all", function(e, obj) {
         self.trigger("pages:" + e, obj);
       });
     },
-    _cache: {},
     annotate: function(marginalia) {
       var self = this; // *sigh*
       var _cache = this._cache;
@@ -252,7 +250,6 @@ define(function (require) {
     },
     loadFromData: function(data) {
       var self = this;
-      this.set({binary: data});
       PDFJS.getDocument(data).then(function(pdf) {
         self.set({raw: pdf, fingerprint: pdf.pdfInfo.fingerprint});
         self.get("pages").populate(pdf);

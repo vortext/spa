@@ -30,6 +30,7 @@ define(function (require) {
 
       var content;
       if(o.spans) {
+        var uuids = _.pluck(annotations, "uuid");
         content = o.spans.map(function(s,i) {
           if(!s) return null;
 
@@ -44,7 +45,7 @@ define(function (require) {
                          data-color={s.color}
                          onMouseEnter={highlight}
                          onMouseLeave={highlight}
-                         data-uuid={s.uuid}>{s.content}</span>
+                         data-uuid={uuids}>{s.content}</span>
                    <span className="post">{s.post}</span>
                   </span>;
         });

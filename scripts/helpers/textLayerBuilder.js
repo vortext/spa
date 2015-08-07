@@ -61,8 +61,8 @@ define(function (require) {
       }
 
       var width = calculateWidth(ctx, geom);
-      if(width == 0) {
-        return;
+      if(width === 0) {
+        return {isWhitespace: true};
       }
 
       var textElement = {
@@ -89,8 +89,9 @@ define(function (require) {
     };
 
     this.projectAnnotations = function(textElement, annotations) {
+      if(!textElement) return;
       if(!annotations || textElement.isWhitespace) {
-        textElement.spans = textElement.annotations = null;
+        textElement.spans = null;
       } else {
         var color = annotations[0].color;
         textElement.color = color;

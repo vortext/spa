@@ -95,9 +95,9 @@ define(function (require) {
               position,
               position + content.length,
               false, {
-                matchDistance: len * 2,
-                contextMatchThreshold: 0.5,
-                patternMatchThreshold: 0.5,
+                matchDistance: 250,
+                contextMatchThreshold: 0.4,
+                patternMatchThreshold: 0.4,
                 flexContext: true
               });
           } else {
